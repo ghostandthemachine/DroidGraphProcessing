@@ -7,7 +7,7 @@ import processing.core.PGraphics;
 import com.droidgraph.material.Material;
 import com.droidgraph.shape.DGPShape2D;
 
-public abstract class DGAbstractShape extends DGNode{
+public abstract class DGAbstractShape extends DGLeaf{
 	
 //	protected String TAG = "DGAbstractShape";
 	

@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.droidgraph.transformation.Bounds2D;
-
 
 /**
  * Defines a transformed coordinate system for a list of SGNodes.
  * 
  */
 public class DGGroup extends DGParent {
-	
-	protected Bounds2D bounds = new Bounds2D(0,0,0,0);
 	
 	protected List<DGNode> children;
 	private List<DGNode> childrenUnmodifiable;
@@ -55,11 +51,11 @@ public class DGGroup extends DGParent {
 			children.add(index, child);
 		}
 		child.setParent(this);
+//		bounds.accumulate(child.getBounds2D());
 	}
 
 	public final void add(DGNode child) {
 		add(-1, child);
-		bounds.accumulate(child.getBounds2D());
 	}
 
 	@Override
@@ -92,7 +88,5 @@ public class DGGroup extends DGParent {
 		children.remove(node);
 		children.add(node);
 	}
-
-
 
 }

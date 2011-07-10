@@ -1,4 +1,4 @@
-package com.droidgraph.touch;
+package com.droidgraph.input;
 
 public class MTAtom {
 	

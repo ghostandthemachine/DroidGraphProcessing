@@ -1,6 +1,7 @@
 package com.droidgraph.fx;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGGroup;
 import com.droidgraph.scene.DGNode;
@@ -77,6 +78,17 @@ public class DGFXGroup extends DGGroup {
 	public void setTranslation(float tx, float ty) {
 		setTranslateX(tx);
 		setTranslateY(ty);
+	}
+	
+	public void translateBy(float tbx, float tby) {
+		setTranslateX(bounds.x + tbx);
+		setTranslateY(bounds.y + tby);
+	}
+	
+	public void translateBy(float tbx, float tby, float tbz) {
+		setTranslateX(bounds.x + tbx);
+		setTranslateY(bounds.y + tby);
+//		setTranslateZ(bounds.z + tbz);
 	}
 
 	public float width = 0;
@@ -268,6 +280,11 @@ public class DGFXGroup extends DGGroup {
 	}
 
 	private String renderer;
+	
+	private int r;
+	private int g;
+	private int b;
+	private int a;
 
 	public String getRenderer() {
 		return renderer;
@@ -279,39 +296,26 @@ public class DGFXGroup extends DGGroup {
 
 	@Override
 	public final void render() {
-		
+
 		if (!isVisible()) {
 			return;
 		}
-		
+
 		p.pushMatrix();
 		p.pushStyle();
-		
-		if (renderer == PApplet.A3D) {
 
-			p.translate(translateX, translateY, translateZ);
+		p.translate(translateX, translateY, translateZ);
 
-			p.rotateX(rotX);
-			p.rotateY(rotY);
-			p.rotateZ(rotZ);
+		p.rotateX(rotX);
+		p.rotateY(rotY);
+		p.rotateZ(rotZ);
 
-			p.translate(width / 2, height / 2, depth / 2);
-			p.scale(scaleX, scaleY, scaleZ);
-			
-			if (children != null) {
-				for (DGNode child : ((DGParent) this).getChildren()) {
-					child.render();
-				}
-			}
+		p.translate(width / 2, height / 2, depth / 2);
+		p.scale(scaleX, scaleY, scaleZ);
 
-		} else {
-			p.translate(translateX, translateY);
-			p.rotate(angle);
-
-			if (children != null) {
-				for (DGNode child : ((DGParent) this).getChildren()) {
-					child.render();
-				}
+		if (children != null) {
+			for (DGNode child : ((DGParent) this).getChildren()) {
+				child.render();
 			}
 		}
 
@@ -319,5 +323,69 @@ public class DGFXGroup extends DGGroup {
 		p.popStyle();
 
 	}
+	
+	public final void render(PGraphics p) {
+
+		if (!isVisible()) {
+			return;
+		}
+		
+		Shared.p("DGFXGroup, render(BUFFER)", "bounds = ", bounds.x, bounds.y, bounds.width, bounds.height);
+
+		p.pushMatrix();
+
+		p.translate(translateX, translateY, translateZ);
+
+		p.rotateX(rotX);
+		p.rotateY(rotY);
+		p.rotateZ(rotZ);
+
+		p.translate(width / 2, height / 2, depth / 2);
+		p.scale(scaleX, scaleY, scaleZ);
+		
+		// Fill with the color which has just been set by the picking class
+		p.fill(r, g, b, a);
+		p.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		
+		if (children != null) {
+			for (DGNode child : ((DGParent) this).getChildren()) {
+				child.render();
+			}
+		}
+
+		p.popMatrix();
+
+
+	}
+	
+	public void setColor(int r, int g, int b, int a) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.a = a;
+	}
+	
+	public int[] getColor() {
+		return new int[] {r, g, b, 255};
+	}
+	
+	public int getRed() {
+		return r;
+	}
+
+	public int getGreen() {
+		return g;
+	}
+	
+	public int getBlue() {
+		return b;
+	}
+	
+	public int getAlpha() {
+		return a;
+	}
+	
+	
+	
 
 }

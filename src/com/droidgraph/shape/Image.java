@@ -29,7 +29,7 @@ public class Image extends DGPShape2D {
 
 	public void paint(PGraphics p) {
 		if (mImage != null) {
-			p.image(mImage, x, y, width, height);
+			p.image(mImage, 0, 0, width, height);
 		}
 	}
 	

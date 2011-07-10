@@ -2,21 +2,18 @@ package com.droidgraph.fx;
 
 import java.util.ArrayList;
 
-import processing.core.PApplet;
 import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGShape;
 import com.droidgraph.shape.DGPShape2D;
-import com.droidgraph.util.Shared;
 
 public class DGFXShape extends DGShape {
-	
+
 	private ArrayList<Runnable> touchActions = new ArrayList<Runnable>();
-	
+
 	public DGFXShape() {
-		renderer = Shared.renderer;
 	}
-	
+
 	public float translateX = 0;
 	public float translateY = 0;
 	public float translateZ = 0;
@@ -27,13 +24,15 @@ public class DGFXShape extends DGShape {
 	 * @return the translateX
 	 */
 	public float getTranslateX() {
-		return translateX;
+		return bounds.x;
 	}
 
 	/**
-	 * @param translateX the translateX to set
+	 * @param translateX
+	 *            the translateX to set
 	 */
 	public void setTranslateX(float translateX) {
+		bounds.x = translateX;
 		this.translateX = translateX;
 	}
 
@@ -41,16 +40,18 @@ public class DGFXShape extends DGShape {
 	 * @return the translateY
 	 */
 	public float getTranslateY() {
-		return translateY;
+		return bounds.y;
 	}
 
 	/**
-	 * @param translateY the translateY to set
+	 * @param translateY
+	 *            the translateY to set
 	 */
 	public void setTranslateY(float translateY) {
+		bounds.y = translateY;
 		this.translateY = translateY;
 	}
-
+	
 	/**
 	 * @return the translateZ
 	 */
@@ -59,21 +60,33 @@ public class DGFXShape extends DGShape {
 	}
 
 	/**
-	 * @param translateZ the translateZ to set
+	 * @param translateZ
+	 *            the translateZ to set
 	 */
 	public void setTranslateZ(float translateZ) {
 		this.translateZ = translateZ;
 	}
-	
+
 	public void setTranslation(float tx, float ty, float tz) {
 		setTranslateX(tx);
 		setTranslateY(ty);
 		setTranslateZ(tz);
 	}
-	
+
 	public void setTranslation(float tx, float ty) {
 		setTranslateX(tx);
 		setTranslateY(ty);
+	}
+	
+	public void translateBy(float tbx, float tby) {
+		setTranslateX(bounds.x + tbx);
+		setTranslateY(bounds.y + tby);
+	}
+	
+	public void translateBy(float tbx, float tby, float tbz) {
+		setTranslateX(bounds.x + tbx);
+		setTranslateY(bounds.y + tby);
+//		setTranslateZ(bounds.z + tbz);
 	}
 
 	public float width = 0;
@@ -88,7 +101,8 @@ public class DGFXShape extends DGShape {
 	}
 
 	/**
-	 * @param width the width to set
+	 * @param width
+	 *            the width to set
 	 */
 	public void setWidth(float width) {
 		bounds.width = width;
@@ -102,7 +116,8 @@ public class DGFXShape extends DGShape {
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *            the height to set
 	 */
 	public void setHeight(float height) {
 		bounds.height = height;
@@ -116,60 +131,86 @@ public class DGFXShape extends DGShape {
 	}
 
 	/**
-	 * @param depth the depth to set
+	 * @param depth
+	 *            the depth to set
 	 */
 	public void setDepth(float depth) {
 		this.depth = depth;
 	}
 
 	public float angle = 0;
-	
+
+	/**
+	 * 
+	 * @param angle 
+	 */
 	public void setAngle(float a) {
 		angle = a;
 	}
-	
+
 	public float getAngle() {
 		return angle;
 	}
 
-	public float rotX = 0;
-	public float rotY = 0;
-	public float rotZ = 0;
+	public float rotateX = 0;
+	public float rotateY = 0;
+	public float rotateZ = 0;
 
-	public float getRotX() {
-		return rotX;
+	/**
+	 * @return the rotateX
+	 */
+	public float getRotateX() {
+		return rotateX;
 	}
 
-	public void setRotX(float rotX) {
-		this.rotX = rotX;
+	/**
+	 * @param rotateX
+	 *            the rotateX to set
+	 */
+	public void setRotateX(float rotateX) {
+		this.rotateX = rotateX;
 	}
 
-	public float getRotY() {
-		return rotY;
+	/**
+	 * @return the rotateY
+	 */
+	public float getRotateY() {
+		return rotateY;
 	}
 
-	public void setRotY(float rotY) {
-		this.rotY = rotY;
+	/**
+	 * @param rotateY
+	 *            the rotateY to set
+	 */
+	public void setRotateY(float rotateY) {
+		this.rotateY = rotateY;
 	}
 
-	public float getRotZ() {
-		return rotZ;
+	/**
+	 * @return the rotateZ
+	 */
+	public float getRotateZ() {
+		return rotateZ;
 	}
 
-	public void setRotZ(float rotZ) {
-		this.rotZ = rotZ;
+	/**
+	 * @param rotateZ
+	 *            the rotateZ to set
+	 */
+	public void setRotateZ(float rotateZ) {
+		this.rotateZ = rotateZ;
 	}
-	
+
 	public void setRotation(float rx, float ry, float rz) {
-		setRotX(rx);
-		setRotY(ry);
-		setRotZ(rz);
+		setRotateX(rx);
+		setRotateY(ry);
+		setRotateZ(rz);
 	}
-	
+
 	public float rotationCenterX = 0;
 	public float rotationCenterY = 0;
 	public float rotationCenterZ = 0;
-	
+
 	public float getRotationCenterX() {
 		return rotationCenterX;
 	}
@@ -185,7 +226,7 @@ public class DGFXShape extends DGShape {
 	public void setRotationCenterY(float rotationCenterY) {
 		this.rotationCenterY = rotationCenterY;
 	}
-	
+
 	public float getRotationCenterZ() {
 		return rotationCenterZ;
 	}
@@ -198,13 +239,13 @@ public class DGFXShape extends DGShape {
 		setRotationCenterX(rcx);
 		setRotationCenterY(rcy);
 	}
-	
+
 	public void setRotationCenter(float rcx, float rcy, float rcz) {
 		setRotationCenterX(rcx);
 		setRotationCenterY(rcy);
 		setRotationCenterZ(rcz);
 	}
-	
+
 	public float scaleX = 1;
 	public float scaleY = 1;
 	public float scaleZ = 1;
@@ -214,6 +255,7 @@ public class DGFXShape extends DGShape {
 	}
 
 	public void setScaleX(float scaleX) {
+		bounds.width = bounds.width * scaleX;
 		this.scaleX = scaleX;
 	}
 
@@ -222,6 +264,7 @@ public class DGFXShape extends DGShape {
 	}
 
 	public void setScaleY(float scaleY) {
+		bounds.height = bounds.height * scaleY;
 		this.scaleY = scaleY;
 	}
 
@@ -232,7 +275,7 @@ public class DGFXShape extends DGShape {
 	public void setScaleZ(float scaleZ) {
 		this.scaleZ = scaleZ;
 	}
-	
+
 	public void setScale(float sx, float sy, float sz) {
 		this.scaleX = sx;
 		this.scaleY = sy;
@@ -242,7 +285,6 @@ public class DGFXShape extends DGShape {
 	public float shearX = 0;
 	public float shearY = 0;
 	public float shearZ = 0;
-
 
 	public float getShearX() {
 		return shearX;
@@ -267,54 +309,63 @@ public class DGFXShape extends DGShape {
 	public void setShearZ(float shearZ) {
 		this.shearZ = shearZ;
 	}
-	
-	private String renderer;
-	
-	public String getRenderer() {
-		return renderer;
-	}
 
-	public void setRenderer(String renderer) {
-		this.renderer = renderer;
-	}
-	
 	@Override
 	public void setShape(DGPShape2D shape) {
-		//set the shape
+		// set the shape
 		super.setShape(shape);
 	}
-	
+
 	@Override
 	public void paint(PGraphics pg) {
+		
 		pg.pushMatrix();
 
-		if (renderer == PApplet.A3D) {
+		pg.translate(translateX + rotationCenterX, translateY + rotationCenterY, translateZ + rotationCenterZ);
 
-			pg.translate(translateX, translateY, translateZ);
+		pg.rotateX(rotateX);
+		pg.rotateY(rotateY);
+		pg.rotateZ(rotateZ);
+		
+		pg.translate( - rotationCenterX, - rotationCenterY, - rotationCenterZ);
 
-			pg.rotateX(rotX);
-			pg.rotateY(rotY);
-			pg.rotateZ(rotZ);
-
-			pg.scale(scaleX, scaleY, scaleZ);
-			
-			super.paint(pg);
-
-		} else {
-			pg.translate(translateX, translateY);
-			
-			pg.rotate(angle);
-			
-
-			super.paint(pg);
-		}
+		pg.scale(scaleX, scaleY, scaleZ);
+		
+//		fxPaintOverride(pg);
+		
+		super.paint(pg);
 
 		pg.popMatrix();
 
 	}
-	
+
+	public void paint(PGraphics pg, int[] cid) {
+		
+		pg.pushMatrix();
+
+		pg.translate(translateX, translateY, translateZ);
+
+		pg.rotateX(rotateX);
+		pg.rotateY(rotateY);
+		pg.rotateZ(rotateZ);
+
+		pg.scale(scaleX, scaleY, scaleZ);
+
+		fxPaintOverride(pg);
+		
+		super.paint(pg, cid);
+
+		pg.popMatrix();
+	}
+
 	public void addTouchAction(Runnable r) {
 		touchActions.add(r);
 	}
 	
+	// Overide this to do any custom painting
+	// currently used in DGFXComp for the background
+	protected void fxPaintOverride(PGraphics pg) {
+		
+	}
+
 }

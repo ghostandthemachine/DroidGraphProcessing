@@ -29,8 +29,14 @@ public class Bounds2D {
 		for (Bounds2D b : bs) {
 			x = b.x < x ? b.x : x;
 			y = b.y < y ? b.y : y;
-			width = (b.x + b.width) < (x + width) ? width : (width + ((b.x + b.width) - (x + width)));
-			height = (b.y + b.height) < (y + height) ? height : (height + ((b.y + b.height) - (y + height)));
+			if ((b.x + b.width) > x + width) {
+				width += ((b.x + b.width) - (x + width));
+			}
+			if ((b.y + b.height) > y + height) {
+				height += ((b.y + b.height) - (y + height));
+			}
+//			width = (b.x + b.width) < (x + width) ? width : (width + ((b.x + b.width) - (x + width)));
+//			height = (b.y + b.height) < (y + height) ? height : (height + ((b.y + b.height) - (y + height)));
 		}
 	}
 
