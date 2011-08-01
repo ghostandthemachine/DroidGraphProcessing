@@ -1,7 +1,5 @@
 package com.droidgraph.input;
 
-import java.util.ArrayList;
-
 import android.view.MotionEvent;
 
 import com.droidgraph.event.DGEventParsed;

@@ -15,7 +15,6 @@ import com.droidgraph.fx.DGFXShape;
 import com.droidgraph.input.TempMotionManager;
 import com.droidgraph.transformation.Bounds2D;
 import com.droidgraph.util.Shared;
-import com.droidgraph.util.Timer;
 
 public class DGScene {
 
