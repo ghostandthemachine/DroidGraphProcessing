@@ -212,5 +212,9 @@ public class DGScene {
 		}
 	}
 
+	public void setNodeDepth(DGFXShape node, int zdepth) {
+		
+	}
+
 
 }

@@ -327,9 +327,9 @@ public class DGFXShape extends DGShape {
 		pg.rotateY(rotateY);
 		pg.rotateZ(rotateZ);
 		
-		pg.translate( - rotationCenterX, - rotationCenterY, - rotationCenterZ);
+		pg.translate( -rotationCenterX, -rotationCenterY, -rotationCenterZ);
 
-		pg.scale(scaleX, scaleY, scaleZ);
+//		pg.scale(scaleX, scaleY, scaleZ);
 		
 //		fxPaintOverride(pg);
 		

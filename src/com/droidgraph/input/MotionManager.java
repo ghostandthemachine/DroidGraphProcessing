@@ -57,7 +57,7 @@ public class MotionManager {
 
 			case MotionEvent.ACTION_DOWN:
 				// Only an action down if this is the first pointer
-//				Shared.p("MotionMananger, motionevent == down", ep.pid);
+				Shared.p("MotionMananger, motionevent == down", ep.globalPointerID);
 				scene.quePick(new Pick(this, ep.me, ep.globalPointerID, actionCode));
 				numPointers++;
 				break;
@@ -68,14 +68,14 @@ public class MotionManager {
 					did = i	;
 				}
 				
-//				Shared.p("MotionMananger, motionevent == pointer down", did);
+				Shared.p("MotionMananger, motionevent == pointer down", did);
 				
 				scene.quePick(new Pick(this, ep.me, did, actionCode));
 				numPointers++;
 				break;
 
 			case MotionEvent.ACTION_POINTER_UP:
-//				Shared.p("MotionMananger, motionevent == pointer up", ep.pid);
+//				Shared.p("MotionMananger, motionevent == pointer up", ep.globalPointerID);
 				if (pointers[ep.globalPointerID].locked()) {
 					pointers[ep.globalPointerID].update(ep.me, actionCode);
 					pointers[ep.globalPointerID].unlock();
@@ -85,7 +85,7 @@ public class MotionManager {
 				break;
 
 			case MotionEvent.ACTION_UP:
-//				Shared.p("MotionMananger, motionevent == up", ep.pid);
+				Shared.p("MotionMananger, motionevent == up", ep.globalPointerID);
 				int uid = ep.globalPointerID;
 				if (pointers[0].locked()) {
 					uid = 1;
@@ -98,7 +98,7 @@ public class MotionManager {
 				break;
 
 			case MotionEvent.ACTION_MOVE:
-//				Shared.p("MotionMananger, motionevent == move", ep.pid);
+//				Shared.p("MotionMananger, motionevent == move", ep.globalPointerID);
 				if (pointers[ep.globalPointerID].locked()) {
 					pointers[ep.globalPointerID].update(ep.me, actionCode);
 				}
