@@ -2,6 +2,7 @@ package com.droidgraph.scene;
 
 import processing.core.PGraphics;
 
+import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.shape.DGPShape2D;
 import com.droidgraph.util.Shared;
 
@@ -17,14 +18,7 @@ public class DGShape extends DGAbstractShape {
 		shape.paint(Shared.offscreenBuffer);
 	}
 
-	public void paint(PGraphics p, int[] cid) {
-		if (shape != null) {
-			p.fill(cid[0], cid[1], cid[2], cid[3]);
-			p.stroke(cid[0], cid[1], cid[2], cid[3]);
-			shape.paint(p);
-		}
-	}
-
+	@Override
 	public void paint(PGraphics p) {
 		if (shape != null) {
 			p.fill(fill[0], fill[1], fill[2], fill[3]);
@@ -32,6 +26,13 @@ public class DGShape extends DGAbstractShape {
 					strokeColor[3]);
 			shape.paint(p);
 		}
+	}
+	
+	
+	public void renderToPickBuffer(PGraphics p) {
+//		Shared.p(this, "DGShape");
+		((PickBuffer) Shared.offscreenBuffer).setCurrentIDIndex(sceneID);
+		paint(Shared.offscreenBuffer);
 	}
 
 	@Override

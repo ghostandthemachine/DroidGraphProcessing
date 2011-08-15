@@ -1,18 +1,15 @@
-package com.droidgraph.fx;
+package com.droidgraph.affine;
 
 import processing.core.PApplet;
-import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGGroup;
-import com.droidgraph.scene.DGNode;
-import com.droidgraph.scene.DGParent;
 import com.droidgraph.util.Shared;
 
-public class DGFXGroup extends DGGroup {
+public class DGAffineTransform extends DGGroup {
 
 	private PApplet p;
 
-	public DGFXGroup() {
+	public DGAffineTransform() {
 
 		renderer = Shared.renderer;
 		p = Shared.pApplet;
@@ -280,11 +277,6 @@ public class DGFXGroup extends DGGroup {
 	}
 
 	private String renderer;
-	
-	private int r;
-	private int g;
-	private int b;
-	private int a;
 
 	public String getRenderer() {
 		return renderer;
@@ -295,8 +287,7 @@ public class DGFXGroup extends DGGroup {
 	}
 
 	@Override
-	public final void render() {
-
+	public void render() {
 		if (!isVisible()) {
 			return;
 		}
@@ -311,81 +302,13 @@ public class DGFXGroup extends DGGroup {
 		p.rotateZ(rotZ);
 
 		p.translate(width / 2, height / 2, depth / 2);
+		
 		p.scale(scaleX, scaleY, scaleZ);
 
-		if (children != null) {
-			for (DGNode child : ((DGParent) this).getChildren()) {
-				child.render();
-			}
-		}
+		super.render();
 
 		p.popMatrix();
 		p.popStyle();
 
 	}
-	
-	public final void render(PGraphics p) {
-
-		if (!isVisible()) {
-			return;
-		}
-		
-		Shared.p("DGFXGroup, render(BUFFER)", "bounds = ", bounds.x, bounds.y, bounds.width, bounds.height);
-
-		p.pushMatrix();
-
-		p.translate(translateX, translateY, translateZ);
-
-		p.rotateX(rotX);
-		p.rotateY(rotY);
-		p.rotateZ(rotZ);
-
-		p.translate(width / 2, height / 2, depth / 2);
-		p.scale(scaleX, scaleY, scaleZ);
-		
-		// Fill with the color which has just been set by the picking class
-		p.fill(r, g, b, a);
-		p.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-		
-		if (children != null) {
-			for (DGNode child : ((DGParent) this).getChildren()) {
-				child.render();
-			}
-		}
-
-		p.popMatrix();
-
-
-	}
-	
-	public void setColor(int r, int g, int b, int a) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
-	}
-	
-	public int[] getColor() {
-		return new int[] {r, g, b, 255};
-	}
-	
-	public int getRed() {
-		return r;
-	}
-
-	public int getGreen() {
-		return g;
-	}
-	
-	public int getBlue() {
-		return b;
-	}
-	
-	public int getAlpha() {
-		return a;
-	}
-	
-	
-	
-
 }

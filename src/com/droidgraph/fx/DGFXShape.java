@@ -1,15 +1,11 @@
 package com.droidgraph.fx;
 
-import java.util.ArrayList;
-
 import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGShape;
 import com.droidgraph.shape.DGPShape2D;
 
 public class DGFXShape extends DGShape {
-
-	private ArrayList<Runnable> touchActions = new ArrayList<Runnable>();
 
 	public DGFXShape() {
 	}
@@ -51,7 +47,7 @@ public class DGFXShape extends DGShape {
 		bounds.y = translateY;
 		this.translateY = translateY;
 	}
-	
+
 	/**
 	 * @return the translateZ
 	 */
@@ -77,12 +73,12 @@ public class DGFXShape extends DGShape {
 		setTranslateX(tx);
 		setTranslateY(ty);
 	}
-	
+
 	public void translateBy(float tbx, float tby) {
 		setTranslateX(bounds.x + tbx);
 		setTranslateY(bounds.y + tby);
 	}
-	
+
 	public void translateBy(float tbx, float tby, float tbz) {
 		setTranslateX(bounds.x + tbx);
 		setTranslateY(bounds.y + tby);
@@ -318,7 +314,7 @@ public class DGFXShape extends DGShape {
 
 	@Override
 	public void paint(PGraphics pg) {
-		
+
 		pg.pushMatrix();
 
 		pg.translate(translateX + rotationCenterX, translateY + rotationCenterY, translateZ + rotationCenterZ);
@@ -326,13 +322,13 @@ public class DGFXShape extends DGShape {
 		pg.rotateX(rotateX);
 		pg.rotateY(rotateY);
 		pg.rotateZ(rotateZ);
-		
+
 		pg.translate( -rotationCenterX, -rotationCenterY, -rotationCenterZ);
 
 //		pg.scale(scaleX, scaleY, scaleZ);
-		
+
 //		fxPaintOverride(pg);
-		
+
 		super.paint(pg);
 
 		pg.popMatrix();
@@ -340,7 +336,7 @@ public class DGFXShape extends DGShape {
 	}
 
 	public void paint(PGraphics pg, int[] cid) {
-		
+
 		pg.pushMatrix();
 
 		pg.translate(translateX, translateY, translateZ);
@@ -351,21 +347,8 @@ public class DGFXShape extends DGShape {
 
 		pg.scale(scaleX, scaleY, scaleZ);
 
-		fxPaintOverride(pg);
-		
-		super.paint(pg, cid);
+		super.paint(pg);
 
 		pg.popMatrix();
 	}
-
-	public void addTouchAction(Runnable r) {
-		touchActions.add(r);
-	}
-	
-	// Overide this to do any custom painting
-	// currently used in DGFXComp for the background
-	protected void fxPaintOverride(PGraphics pg) {
-		
-	}
-
 }

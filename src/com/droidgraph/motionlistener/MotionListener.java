@@ -1,55 +1,39 @@
 package com.droidgraph.motionlistener;
 
+import android.view.MotionEvent;
+
 import com.droidgraph.event.DGMotionEvent;
 import com.droidgraph.scene.DGNode;
-import com.droidgraph.util.Shared;
 
-public abstract class MotionListener {
+public abstract class MotionListener{
 	
-	String TAG = "MotionListener";
-	
-	protected DGNode parent;
-	private boolean touchOne = false;
-	
+	protected DGNode node;
+	protected boolean pointerShift = false;
+	protected int pointerShiftValue = 1;
 	
 	public MotionListener(DGNode node) {
-		parent = node;
-		parent.setTouchable(true);
-		Shared.addListenerNode(node);
+		this.node = node;
 	}
 
-	public boolean actionDown(DGMotionEvent me, int pid) {
-		touchOne = true;
-		return true;
-	}
-
-	public boolean actionMove(DGMotionEvent me, int pid) {
-		return true;
-	}
-
-	public boolean actionUp(DGMotionEvent me, int pid) {
-		if(touchOne) {
-			touchOne = false;
-			clicked(me, pid);
+	public boolean handleMotionEvent(DGMotionEvent me) {
+		// Shift the pointer id to maintain our local ids
+		if(pointerShift) {
+			me.setLocalID(pointerShiftValue);
+		}
+		handleActionEvent(me);
+		if((me.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP && me.getId() == 0) {
+			pointerShift = false;
 		}
 		return true;
 	}
 	
-	public boolean clicked(DGMotionEvent me, int pid) {
-		
-		return true;
-	}
-	
-	public DGNode getParent() {
-		return parent;
-	}
-
-	public boolean actionPointerDown(DGMotionEvent me, int pid) {
+	public boolean handleActionEvent(DGMotionEvent me) {
 		return true;
 	}
 
-	public boolean actionPointerUp(DGMotionEvent me, int pid) {
-		return true;
+	public void setPointerShift(int id) {
+		pointerShift = true;
+		pointerShiftValue = id;
 	}
 
 }

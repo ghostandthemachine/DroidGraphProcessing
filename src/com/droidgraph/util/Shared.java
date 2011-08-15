@@ -1,76 +1,106 @@
 package com.droidgraph.util;
 
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.core.PGraphicsAndroid3D;
+import android.animation.Animator;
+import android.app.Activity;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.droidgraph.input.MotionManager;
-import com.droidgraph.input.TempMotionManager;
 import com.droidgraph.scene.DGNode;
 import com.droidgraph.scene.DGScene;
 
 public class Shared {
-	
+
 	public static String TAG = "Shared";
 	
 	public static PApplet pApplet = null;
+
 	public static void setPApplet(PApplet p) {
 		pApplet = p;
 	}
-	
+
 	public static String renderer;
+
 	public static void setRenderer(String r) {
 		renderer = r;
 	}
-	
+
 	public static DGNode curenntTouchedNode;
+
 	public static void setCurrentTouchedNode(DGNode node) {
 		curenntTouchedNode = node;
 	}
-	
+
 	public static MotionEvent motionEvent;
-	public static void setMotionEvent( MotionEvent me) {
+
+	public static void setMotionEvent(MotionEvent me) {
 		motionEvent = me;
 	}
-	
-	public static ArrayList<DGNode> touchables = new ArrayList<DGNode>();
-	public static void addListenerNode( DGNode node ) {
-		touchables.add(node);
-	}
-	
+
 	public static DGScene scene;
+
 	public static void setScene(DGScene s) {
 		scene = s;
 	}
-	
-	public static PGraphicsAndroid3D offscreenBuffer;
-	public static void setOffscreenBuffer(PGraphicsAndroid3D buffer) {
+
+	public static PGraphics offscreenBuffer;
+
+	public static void setOffscreenBuffer(PGraphics buffer) {
 		offscreenBuffer = buffer;
 	}
-	
-	public static void p(Object ... o) {
+
+	public static void p(Object... o) {
 		String result = "";
-		for(Object ts : o) {
+		for (Object ts : o) {
 			result += " ";
-			result += ts.toString();
+			String s = "";
+			if (ts != null) {
+				s = ts.toString();
+			} else {
+				s = "NULL";
+			}
+			result += s;
 		}
 		Log.d(TAG, result);
 	}
-	
+
 	public static PGraphics image;
+
 	public static void setImage(PGraphics c) {
 		image = c;
 	}
 
-	public static MotionManager motionManager;
-	public static void setMotionManager(TempMotionManager mm) {
-		motionManager = mm;
+//	public static MotionManager motionManager;
+//
+//	public static void setMotionManager(TempMotionManager mm) {
+//		motionManager = mm;
+//	}
+
+	public static Activity activity;
+	public static void setActivity(Activity a) {
+		activity = a;
 	}
 	
+	public static Stack<Animator> animatorQue = new Stack<Animator>();
+	public static void queAnimations(Animator... animators) {
+		for (Animator a : animators) {
+			animatorQue.push(a);
+		}
+	}
 	
-	
+	public static <T, S> void pMap(Map<T, S> map) {
+		StringBuilder sb = new StringBuilder("Map size:" + map.size() + " _ ");
+		Set<T> set = map.keySet();
+		for(T t : set) {
+			S s = map.get(t);
+			sb.append("key:" + t + " value:" + s + ", ");
+		}
+		p(sb.toString());
+	}
+
 }

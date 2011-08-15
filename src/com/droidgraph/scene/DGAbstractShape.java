@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import processing.core.PGraphics;
 
+import android.graphics.Color;
+
 import com.droidgraph.material.Material;
 import com.droidgraph.shape.DGPShape2D;
+import com.droidgraph.util.Shared;
 
 public abstract class DGAbstractShape extends DGLeaf{
 	
@@ -46,4 +49,9 @@ public abstract class DGAbstractShape extends DGLeaf{
 
 	}
 	
+	@Override
+	public void render() {
+		paint(Shared.pApplet.g);
+	}
+
 }

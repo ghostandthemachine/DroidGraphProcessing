@@ -1,55 +1,28 @@
 package com.droidgraph.event;
 
-import android.view.MotionEvent;
-
-import com.droidgraph.scene.DGNode;
-
 public class DGMotionEvent {
 
-	public int id = -1;
 	
-	public int targetID = 0;
-
-	public float x = 0;
-	public float y = 0;
-
-	public float localX = 0;
-	public float localY = 0;
-
-	public float lastX = -9999;
-	public float lastY = -9999;
-
-	public float vx = 0;
-	public float vy = 0;
-
-	public int action = 1;
-
-	public DGNode parent;
+	public int id;
+	public int localID = -1;
+	public int action;
+	public float x;
+	public float y;
+	public float velocityX = 0;
+	public float velocityY = 0;
+	public float pressure;
+	public long time;
+	public DGMotionPackage pack;
 	
-	public int numPointers = 0;
-
-	public DGMotionEvent(DGNode node, int id, int np) {
+	
+	public DGMotionEvent(DGMotionPackage p, int id, int action, float x, float y, float pressure) {
 		this.id = id;
-		this.parent = node;
-		this.numPointers = np;
-	}
-
-	public void setTarget(DGNode node) {
-		this.parent = node;
-	}
-
-	public void update(MotionEvent me) {
-		if (id < me.getPointerCount()) {
-			action = me.getAction();
-			lastX = x;
-			lastY = y;
-			x = me.getX(id);
-			y = me.getY(id);
-			if (lastX != -9999) {
-				vx = x - lastX;
-				vy = y - lastY;
-			}
-		}
+		this.action = action;
+		this.x = x;
+		this.y = y;
+		this.pressure = pressure;
+		this.time = p.getTime();
+		this.pack = p;
 	}
 
 	/**
@@ -60,25 +33,47 @@ public class DGMotionEvent {
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public DGMotionPackage getPackage() {
+		return pack;
+	}
+
 
 	/**
-	 * @return the targetID
+	 * @return the localID. If returns (-1), then this event has no local id assigned
 	 */
-	public int getTargetID() {
-		return targetID;
+	public int getLocalID() {
+		return localID;
 	}
 
 	/**
-	 * @param targetID the targetID to set
+	 * @param localID the localID to set
 	 */
-	public void setTargetID(int targetID) {
-		this.targetID = targetID;
+	public void setLocalID(int localID) {
+		this.localID = localID;
+	}
+
+	/**
+	 * @return the action
+	 */
+	public int getAction() {
+		return action;
+	}
+	
+	public int getActionMasked() {
+		return pack.getActionMasked();
+	}
+
+	/**
+	 * @param action the action to set
+	 */
+	public void setAction(int action) {
+		this.action = action;
 	}
 
 	/**
@@ -89,57 +84,71 @@ public class DGMotionEvent {
 	}
 
 	/**
+	 * @param x the x to set
+	 */
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	/**
 	 * @return the y
 	 */
 	public float getY() {
 		return y;
 	}
 
-	public float getLocalX() {
-		return x - parent.getBounds2D().x;
-	}
-
-	public float getLocalY() {
-		return y - parent.getBounds2D().y;
+	/**
+	 * @param y the y to set
+	 */
+	public void setY(float y) {
+		this.y = y;
 	}
 
 	/**
-	 * @return the lastX
+	 * @return the pressure
 	 */
-	public float getLastX() {
-		return lastX;
+	public float getPressure() {
+		return pressure;
 	}
 
 	/**
-	 * @return the lastY
+	 * @param pressure the pressure to set
 	 */
-	public float getLastY() {
-		return lastY;
+	public void setPressure(float pressure) {
+		this.pressure = pressure;
 	}
 
 	/**
-	 * @return the vx
+	 * @return the time stamp
 	 */
-	public float getVelocityx() {
-		return vx;
-	}
-
-	/**
-	 * @return the vy
-	 */
-	public float getVelocityy() {
-		return vy;
-	}
-
-	public int getAction() {
-		return action;
-	}
-
-	public void setNumPointers(int i) {
-		numPointers = i;
+	public long getTime() {
+		return time;
 	}
 	
-	public int getNumPointers() {
-		return numPointers;
+	/**
+	 * @return the number of pointers present when this event was created
+	 */
+	public int getPointerCount() {
+		return pack.getPointerCount();
+	}
+	
+	public void setVelocity(float vx, float vy) {
+		velocityX = vx;
+		velocityY = vy;
+	}
+	
+	/**
+	 * @return string representing this DGMotionEvent
+	 */
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		s.append("DGMotionEvent");
+		s.append(" - PointerID:" + id);
+		s.append(" LocalID:" + localID);
+		s.append(" Action:" + action);
+		s.append(" x:" + x);
+		s.append(" y:" + y);
+		s.append(" pressure:" + pressure);
+		return s.toString();
 	}
 }

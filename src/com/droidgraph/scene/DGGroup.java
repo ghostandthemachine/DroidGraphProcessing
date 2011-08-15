@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import processing.core.PGraphics;
+
+import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.util.Shared;
 
 /**
@@ -11,6 +14,10 @@ import com.droidgraph.util.Shared;
  * 
  */
 public class DGGroup extends DGParent {
+	
+	public DGGroup() {
+		super();
+	}
 
 	protected ArrayList<DGNode> children;
 	private List<DGNode> childrenUnmodifiable;
@@ -67,15 +74,7 @@ public class DGGroup extends DGParent {
 			children.remove(child);
 			child.setParent(null);
 		}
-	}
-
-	public final void remove(int index) {
-		if (children != null) {
-			DGNode child = children.get(index);
-			if (child != null) {
-				remove(child);
-			}
-		}
+		Shared.scene.unregisterNode(child);
 	}
 
 	public long getLifeTime() {
@@ -85,22 +84,19 @@ public class DGGroup extends DGParent {
 	public void bringToFront(DGNode node) {
 		children.remove(node); // update the local node depth in the list
 		children.add(node);
-		
-		if (node.isTouchable()) {
-			Shared.touchables.remove(node);		// update the global touchables list so that the
-			Shared.touchables.add(node);		// changes are reflected in the picking buffer
-		}
 	}
 
 	public void setNodeDepth(DGNode node, int depth) {
 		if (children.contains(node)) {
 			children.remove(node); // update the local node depth in the list
 			children.add(0, node);
-
-			if (node.isTouchable()) {
-				Shared.touchables.remove(node);		// update the global touchables list so that the
-				Shared.touchables.add(node);		// changes are reflected in the picking buffer
-			}
 		}
+	}
+	
+	@Override
+	public void renderToPickBuffer(PGraphics p) {
+		((PickBuffer) Shared.offscreenBuffer).setCurrentIDIndex(sceneID);
+		p.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		super.renderToPickBuffer(p);
 	}
 }
