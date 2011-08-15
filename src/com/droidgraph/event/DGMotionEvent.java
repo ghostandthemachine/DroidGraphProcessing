@@ -137,6 +137,14 @@ public class DGMotionEvent {
 		velocityY = vy;
 	}
 	
+	public float getVelocityX() {
+		return velocityX;
+	}
+
+	public float getVelocityY() {
+		return velocityY;
+	}
+	
 	/**
 	 * @return string representing this DGMotionEvent
 	 */
@@ -151,4 +159,6 @@ public class DGMotionEvent {
 		s.append(" pressure:" + pressure);
 		return s.toString();
 	}
+
+
 }

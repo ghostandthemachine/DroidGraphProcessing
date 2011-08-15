@@ -26,12 +26,16 @@ public class MultiTouchManager {
 
 	private DGScene scene;
 
+	private int numPointers;
+
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	/** Constructor that sets handleSingleTouchEvents to true */
 	public MultiTouchManager(DGScene scene) {
 		this.scene = scene;
 		unPickTask = new UnPick(this);
+		Shared.setMotionManager(this);
+		Shared.setMap(pointerToNodeMap);
 	}
 
 	public DGNode getFirstEventBlocker(DGNode node) {
@@ -51,8 +55,13 @@ public class MultiTouchManager {
 		processEvent(event);
 		return true;
 	}
+	
+	public int getNumPointers() {
+		return numPointers;
+	}
 
 	void processEvent(MotionEvent ev) {
+		numPointers = ev.getPointerCount();
 		final DGMotionPackage pack = new DGMotionPackage(ev);
 		final int historySize = ev.getHistorySize();
 		final int pointerCount = ev.getPointerCount();
@@ -102,7 +111,6 @@ public class MultiTouchManager {
 			if (ev.getId() == ev.getPackage().getActionIndex() || pack.getPointerCount() == 1) {
 				if (ev.getActionMasked() == MotionEvent.ACTION_DOWN
 						|| ev.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
-					Shared.p(ev);
 					handlePointerDown(ev);
 				} else if (ev.getAction() == MotionEvent.ACTION_UP
 						|| ev.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {

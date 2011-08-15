@@ -1,5 +1,6 @@
 package com.droidgraph.util;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -11,6 +12,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.droidgraph.input.MultiTouchManager;
 import com.droidgraph.scene.DGNode;
 import com.droidgraph.scene.DGScene;
 
@@ -101,6 +103,17 @@ public class Shared {
 			sb.append("key:" + t + " value:" + s + ", ");
 		}
 		p(sb.toString());
+	}
+	
+	
+	public static HashMap<Integer, DGNode> map;
+	public static void setMap(HashMap<Integer, DGNode> m) {
+		map = m;
+	}
+
+	public static MultiTouchManager multiTouchManager;
+	public static void setMotionManager(MultiTouchManager m) {
+		multiTouchManager = m;
 	}
 
 }

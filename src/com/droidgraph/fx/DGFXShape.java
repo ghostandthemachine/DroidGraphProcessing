@@ -277,6 +277,52 @@ public class DGFXShape extends DGShape {
 		this.scaleY = sy;
 		this.scaleZ = sz;
 	}
+	
+	public float scaleCenterX = 0;
+	public float scaleCenterY = 0;
+	public float scaleCenterZ = 0;
+	
+	/**
+	 * @return the scaleCenterX
+	 */
+	public float getScaleCenterX() {
+		return scaleCenterX;
+	}
+
+	/**
+	 * @param scaleCenterX the scaleCenterX to set
+	 */
+	public void setScaleCenterX(float scaleCenterX) {
+		this.scaleCenterX = scaleCenterX;
+	}
+
+	/**
+	 * @return the scaleCenterY
+	 */
+	public float getScaleCenterY() {
+		return scaleCenterY;
+	}
+
+	/**
+	 * @param scaleCenterY the scaleCenterY to set
+	 */
+	public void setScaleCenterY(float scaleCenterY) {
+		this.scaleCenterY = scaleCenterY;
+	}
+
+	/**
+	 * @return the scaleCenterZ
+	 */
+	public float getScaleCenterZ() {
+		return scaleCenterZ;
+	}
+
+	/**
+	 * @param scaleCenterZ the scaleCenterZ to set
+	 */
+	public void setScaleCenterZ(float scaleCenterZ) {
+		this.scaleCenterZ = scaleCenterZ;
+	}
 
 	public float shearX = 0;
 	public float shearY = 0;
@@ -317,7 +363,9 @@ public class DGFXShape extends DGShape {
 
 		pg.pushMatrix();
 
-		pg.translate(translateX + rotationCenterX, translateY + rotationCenterY, translateZ + rotationCenterZ);
+		pg.translate(translateX, translateY, translateZ);
+		
+		pg.translate(rotationCenterX, rotationCenterY, rotationCenterZ);
 
 		pg.rotateX(rotateX);
 		pg.rotateY(rotateY);
@@ -325,30 +373,15 @@ public class DGFXShape extends DGShape {
 
 		pg.translate( -rotationCenterX, -rotationCenterY, -rotationCenterZ);
 
-//		pg.scale(scaleX, scaleY, scaleZ);
-
-//		fxPaintOverride(pg);
-
-		super.paint(pg);
-
-		pg.popMatrix();
-
-	}
-
-	public void paint(PGraphics pg, int[] cid) {
-
-		pg.pushMatrix();
-
-		pg.translate(translateX, translateY, translateZ);
-
-		pg.rotateX(rotateX);
-		pg.rotateY(rotateY);
-		pg.rotateZ(rotateZ);
-
+		pg.translate(scaleCenterX, scaleCenterY, scaleCenterZ);
+		
 		pg.scale(scaleX, scaleY, scaleZ);
 
+		pg.translate(-scaleCenterX, -scaleCenterY, -scaleCenterZ);
+		
 		super.paint(pg);
 
 		pg.popMatrix();
+
 	}
 }

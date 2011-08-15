@@ -49,7 +49,8 @@ public abstract class ActionListener extends MotionListener {
 		case MotionEvent.ACTION_POINTER_DOWN:
 			// if this is globally an ACTION_POINTER_DOWN, but new to this node
 			// then reset the action to ACTION_DOWN
-			if(numPointers == 0) {
+			if(me.getLocalID() == 0) {
+				touchOne = true;
 				me.setAction(MotionEvent.ACTION_DOWN);
 				addNewPointer(me);
 				actionDown(me);
@@ -61,31 +62,46 @@ public abstract class ActionListener extends MotionListener {
 
 		case MotionEvent.ACTION_UP:
 			updateEventID(me);
-			actionUp(me);
+
 			// create the click call
-			if (touchOne) {
+			if (me.getLocalID() == 0) {
 				touchOne = false;
+				// call the click
 				clicked(me);
 			}	
+			actionUp(me);
 			// remove the pointer
 			removePointer(me);
+			managerPointerFlush();
 			break;
 
 		case MotionEvent.ACTION_POINTER_UP:
 			updateEventID(me);
-//			Shared.p("ACtion Pointer up id:", me.getId());
-			if(numPointers == 1){ 
+			if(me.getLocalID() == 0){ 
 				me.setAction(MotionEvent.ACTION_UP);
+				touchOne = false;
+				// call the click
+				clicked(me);
 				actionUp(me);
 				removePointer(me);
 			} else {
 				actionPointerUp(me);
 				removePointer(me);
 			}
+			managerPointerFlush();
 			break;
 		}
 
 		return true;
+	}
+
+	private void managerPointerFlush() {
+		if(Shared.multiTouchManager.getNumPointers() == 1) {
+			for(int i = 0; i < globalToLocalPointerID.length; i++){
+				globalToLocalPointerID[i] = -1;
+			}
+			numPointers = 0;
+		}
 	}
 
 	// add a new pointer by updating the counter and assigning a new local id
