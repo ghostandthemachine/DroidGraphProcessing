@@ -12,7 +12,14 @@ public class DGShape extends DGAbstractShape {
 
 	protected float[] fill = { 255, 255, 255, 255 };
 	protected float[] strokeColor = { 0, 0, 0, 0 };
+	
+	private float strokeWeight = 1.0f;
 
+
+	public void strokeWeight(float stroke) {
+		this.strokeWeight = stroke;
+	}
+	
 	@Override
 	public void paint() {
 		shape.paint(Shared.offscreenBuffer);
@@ -24,6 +31,7 @@ public class DGShape extends DGAbstractShape {
 			p.fill(fill[0], fill[1], fill[2], fill[3]);
 			p.stroke(strokeColor[0], strokeColor[1], strokeColor[2],
 					strokeColor[3]);
+			p.strokeWeight(strokeWeight);
 			shape.paint(p);
 		}
 	}

@@ -6,6 +6,8 @@ import java.util.List;
 
 import processing.core.PGraphics;
 
+import com.droidgraph.affine.DGAffineTransform;
+import com.droidgraph.fx.DGFXShape;
 import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.util.Shared;
 
@@ -14,6 +16,9 @@ import com.droidgraph.util.Shared;
  * 
  */
 public class DGGroup extends DGParent {
+	
+	private boolean DEBUG = true;
+	
 	
 	public DGGroup() {
 		super();
@@ -62,7 +67,31 @@ public class DGGroup extends DGParent {
 	}
 
 	public final void add(DGNode child) {
+		if(DEBUG) {
+			Shared.p(this, bounds, child);
+		}
+		if(child instanceof DGAffineTransform) {
+			if(DEBUG) {
+				Shared.p("AccumBounds - DGGroup - add(), DGAffineTrans", child, child.bounds);
+			}
+			accumBounds(((DGAffineTransform) child));
+		} else if(child instanceof DGShape) {
+			if(DEBUG) {
+				Shared.p("AccumBounds - DGGroup - add(), DGFXShape", child, child.bounds);
+			}
+			accumBounds(((DGFXShape) child));
+		}
+		Shared.p("end add", this, bounds, child);
+		
 		add(-1, child);
+	}
+	
+	private void accumBounds(DGAffineTransform n) {
+		getBounds2D().accumulate(n);
+	}
+	
+	private void accumBounds(DGFXShape n) {
+		getBounds2D().accumulate(n);
 	}
 
 	@Override

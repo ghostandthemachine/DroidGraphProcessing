@@ -112,11 +112,13 @@ public class MultiTouchManager {
 				if (ev.getActionMasked() == MotionEvent.ACTION_DOWN
 						|| ev.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
 					handlePointerDown(ev);
+					Shared.setDebug(true);
 				} else if (ev.getAction() == MotionEvent.ACTION_UP
 						|| ev.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
 					if(DEBUG) {
 						Shared.p(ev);
 					}
+					Shared.setDebug(false);
 					handlePointerUp(ev, false);
 				}
 			}

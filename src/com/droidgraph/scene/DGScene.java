@@ -164,7 +164,7 @@ public class DGScene {
 		// Begin drawing to the off screen buffer
 		offScreenBuffer.beginDraw();
 		// clear the last buffered rendering
-		offScreenBuffer.background(0, 0, 0, 0);
+		offScreenBuffer.background(0,0,0,0);
 		// return the number of set bits which in this case is the number of
 		// nodes in the scene
 		root.renderToPickBuffer(offScreenBuffer);

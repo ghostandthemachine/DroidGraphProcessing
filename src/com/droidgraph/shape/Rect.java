@@ -19,4 +19,12 @@ public class Rect extends DGPShape2D {
 		p.rect(x, y, width, height);
 	}
 
+	public void setCorners(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+		x = x1;
+		y = y1;
+		width = x2 - x1;
+		height = y2 - y1;
+		bounds.setBounds(x, y, width, height);
+	}
+
 }

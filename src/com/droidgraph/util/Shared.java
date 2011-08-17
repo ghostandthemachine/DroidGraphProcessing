@@ -18,6 +18,11 @@ import com.droidgraph.scene.DGScene;
 
 public class Shared {
 
+	public static boolean DEBUG = false;
+	public static void setDebug(boolean b) {
+		DEBUG = b;
+	}
+
 	public static String TAG = "Shared";
 	
 	public static PApplet pApplet = null;
@@ -114,6 +119,13 @@ public class Shared {
 	public static MultiTouchManager multiTouchManager;
 	public static void setMotionManager(MultiTouchManager m) {
 		multiTouchManager = m;
+	}
+	
+	public static float minMaxF(float min, float max, float val) {
+		float out = val;
+		out = (out <= max) ? out : max;
+		out = (out >= min) ? out : min;
+		return out;
 	}
 
 }

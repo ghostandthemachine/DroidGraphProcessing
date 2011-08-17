@@ -1,7 +1,9 @@
 package com.droidgraph.affine;
 
 import processing.core.PApplet;
+import processing.core.PGraphics;
 
+import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.scene.DGGroup;
 import com.droidgraph.util.Shared;
 
@@ -34,6 +36,7 @@ public class DGAffineTransform extends DGGroup {
 	 */
 	public void setTranslateX(float translateX) {
 		this.translateX = translateX;
+		this.bounds.x = translateX;
 	}
 
 	/**
@@ -49,6 +52,7 @@ public class DGAffineTransform extends DGGroup {
 	 */
 	public void setTranslateY(float translateY) {
 		this.translateY = translateY;
+		this.bounds.y = translateY;
 	}
 
 	/**
@@ -104,6 +108,7 @@ public class DGAffineTransform extends DGGroup {
 	 *            the width to set
 	 */
 	public void setWidth(float width) {
+		bounds.width = width;
 		this.width = width;
 	}
 
@@ -119,6 +124,7 @@ public class DGAffineTransform extends DGGroup {
 	 *            the height to set
 	 */
 	public void setHeight(float height) {
+		bounds.height = height;
 		this.height = height;
 	}
 
@@ -305,10 +311,39 @@ public class DGAffineTransform extends DGGroup {
 		
 		p.scale(scaleX, scaleY, scaleZ);
 
+		p.translate(-(width / 2), -(height / 2), -(depth / 2));
+		
 		super.render();
 
 		p.popMatrix();
 		p.popStyle();
 
+	}
+	
+	@Override
+	public void renderToPickBuffer(PGraphics p) {
+		if (!isVisible()) {
+			return;
+		}
+
+		p.pushMatrix();
+		p.pushStyle();
+
+		p.translate(translateX, translateY, translateZ);
+
+		p.rotateX(rotX);
+		p.rotateY(rotY);
+		p.rotateZ(rotZ);
+
+		p.translate(width / 2, height / 2, depth / 2);
+		
+		p.scale(scaleX, scaleY, scaleZ);
+
+		p.translate(-(width / 2), -(height / 2), -(depth / 2));
+		
+		super.renderToPickBuffer(p);
+
+		p.popMatrix();
+		p.popStyle();
 	}
 }

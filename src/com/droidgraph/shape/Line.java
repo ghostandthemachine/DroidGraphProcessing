@@ -46,4 +46,20 @@ public class Line extends DGPShape2D {
 		p.line(x, y, z, x2, y2, z2);
 	}
 
+	public void setLine(float x1, float y1, float x2, float y2) {
+		this.x = x1;
+		this.y = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+	}
+	
+	public void setLine(float x1, float y1, float z1, float x2, float y2, float z2) {
+		this.x = x1;
+		this.y = y1;
+		this.z = z1;
+		this.x2 = x2;
+		this.y2 = y2;
+		this.z2 = z2;
+	}
+
 }
