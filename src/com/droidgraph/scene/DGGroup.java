@@ -6,8 +6,6 @@ import java.util.List;
 
 import processing.core.PGraphics;
 
-import com.droidgraph.affine.DGAffineTransform;
-import com.droidgraph.fx.DGFXShape;
 import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.util.Shared;
 
@@ -17,7 +15,7 @@ import com.droidgraph.util.Shared;
  */
 public class DGGroup extends DGParent {
 	
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 	
 	
 	public DGGroup() {
@@ -41,6 +39,10 @@ public class DGGroup extends DGParent {
 	}
 
 	public void add(int index, DGNode child) {
+		if(DEBUG) {
+			Shared.p("add(",index,", ", child, ")");
+			Shared.p("before add", this, bounds, child, child.getBounds2D());
+		}
 		if (child == null) {
 			throw new IllegalArgumentException("null child");
 		}
@@ -63,37 +65,20 @@ public class DGGroup extends DGParent {
 			children.add(index, child);
 		}
 		child.setParent(this);
-		// bounds.accumulate(child.getBounds2D());
+		accumulateBounds(child);
+		if(DEBUG) {
+			Shared.p("after add", this, bounds, child, child.getBounds2D());
+		}
 	}
 
 	public final void add(DGNode child) {
-		if(DEBUG) {
-			Shared.p(this, bounds, child);
-		}
-		if(child instanceof DGAffineTransform) {
-			if(DEBUG) {
-				Shared.p("AccumBounds - DGGroup - add(), DGAffineTrans", child, child.bounds);
-			}
-			accumBounds(((DGAffineTransform) child));
-		} else if(child instanceof DGShape) {
-			if(DEBUG) {
-				Shared.p("AccumBounds - DGGroup - add(), DGFXShape", child, child.bounds);
-			}
-			accumBounds(((DGFXShape) child));
-		}
-		Shared.p("end add", this, bounds, child);
-		
 		add(-1, child);
 	}
 	
-	private void accumBounds(DGAffineTransform n) {
-		getBounds2D().accumulate(n);
+	private void accumulateBounds(DGNode node) {
+		bounds.accumulate(node.getBounds2D());
 	}
 	
-	private void accumBounds(DGFXShape n) {
-		getBounds2D().accumulate(n);
-	}
-
 	@Override
 	public void remove(DGNode child) {
 		if (child == null) {

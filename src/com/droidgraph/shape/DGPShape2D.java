@@ -6,7 +6,7 @@ import com.droidgraph.transformation.Bounds2D;
 
 public abstract class DGPShape2D implements DGPShape{
 
-	protected Bounds2D bounds = new Bounds2D(0, 0, 0, 0);
+	protected Bounds2D bounds = new Bounds2D(this, 0, 0, 0, 0);
 
 	protected float x = 0;
 	protected float y = 0;

@@ -38,8 +38,6 @@ public class DGScene {
 	 */
 	private DGGroup root;
 
-	private DGNode selectedNode;
-
 	/*
 	 * The scene background values
 	 */
@@ -72,7 +70,7 @@ public class DGScene {
 	public DGScene(PApplet parent) {
 		this.parent = parent;
 
-		bounds = new Bounds2D(0, 0, parent.screenWidth, parent.screenHeight);
+		bounds = new Bounds2D(this, 0, 0, parent.screenWidth, parent.screenHeight);
 
 		// Set the global variables in the Shared class
 		Shared.setPApplet(parent);
@@ -105,8 +103,6 @@ public class DGScene {
 		Integer id = bitSet.nextClearBit(1);
 		bitSet.set(id);
 		nodeMap.put(id, node);
-		// Shared.p("Node registered, id = ", id, nodeMap.size(),
-		// nodeMap.entrySet());
 		return id;
 	}
 
@@ -169,6 +165,7 @@ public class DGScene {
 		// nodes in the scene
 		root.renderToPickBuffer(offScreenBuffer);
 		offScreenBuffer.endDraw();
+		Shared.pApplet.image(offScreenBuffer, 0,0);
 	}
 
 	/*

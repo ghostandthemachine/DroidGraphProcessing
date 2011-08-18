@@ -14,6 +14,8 @@ import com.droidgraph.util.Shared;
 public class MultiTouchManager {
 	
 	private boolean DEBUG = false;
+	private boolean DEBUG_PICK = false;
+	private boolean DEBUG_EVENT_BLOCKING = false;
 
 	private DGNode selectedNode;
 
@@ -28,6 +30,7 @@ public class MultiTouchManager {
 
 	private int numPointers;
 
+
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	/** Constructor that sets handleSingleTouchEvents to true */
@@ -39,16 +42,34 @@ public class MultiTouchManager {
 	}
 
 	public DGNode getFirstEventBlocker(DGNode node) {
+		if(DEBUG_EVENT_BLOCKING) {
+			Shared.p("MultiTouchManager, getFirstEventBlocker(", node, ")", "parent =", node.getParent());
+		}
 		if (node != null) {
+			if(DEBUG_EVENT_BLOCKING) {
+				Shared.p("MultiTouchManager, getFirstEventBlocker(), isEventBlocker() =", node.isEventBlocker());
+			}
 			if (node.isEventBlocker()) {
+				if(DEBUG_EVENT_BLOCKING) {
+					Shared.p("MultiTouchManager, getFirstEventBlocker(), isEventBlocker(). Node:", node, "is an event blocker");
+				}
 				return node;
 			} else if (node.getParent() != null) {
-				getFirstEventBlocker(((DGNode) node.getParent()));
+				if(DEBUG_EVENT_BLOCKING) {
+					Shared.p("MultiTouchManager, getFirstEventBlocker(), isEventBlocker(), calling getFirstEventBlocker on parent", node.getParent());
+				}
+				return getFirstEventBlocker(((DGNode) node.getParent()));
 			} else {
+				if(DEBUG_EVENT_BLOCKING) {
+					Shared.p("MultiTouchManager, getFirstEventBlocker(), is not eventBlocker and parent == null");
+				}
 				return null;
 			}
 		}
-		return null;
+		if(DEBUG_EVENT_BLOCKING) {
+			Shared.p("MultiTouchManager, getFirstEventBlocker(), node == null");
+		}
+		return node;
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
@@ -135,13 +156,20 @@ public class MultiTouchManager {
 	public void handlePickSelection(DGMotionEvent dgme, int id, int pid) {
 		// get the node from the map based on the colorID
 		selectedNode = scene.getNodeByID(id);
+		if(DEBUG_PICK) {
+			Shared.p("MultiTouchManager - handlePickSelection(), selectedNode", selectedNode);
+		}
 		// if the node is not an event blocker (has a motionListener) then
 		// recursivley look up the tree for the next parent that is
 		selectedNode = getFirstEventBlocker(selectedNode);
-//		 Shared.p("Selected node:", selectedNode);
+		if(DEBUG_PICK) {
+			Shared.p("MultiTouchManager - handlePickSelection(), selectedNode after getFirstEventBlocker()", selectedNode);
+		}
 		if (selectedNode != null) {
 			pointerToNodeMap.put(pid, selectedNode);
-//			Shared.p("Adding pointer:", pid, "with node:", selectedNode);
+			if(DEBUG_PICK) {
+				Shared.p("MultiTouchManager - handlePickSelection(), attach a pointer to a node in the map, send the event. PID:",pid, "node:", selectedNode);
+			}
 			selectedNode.handleMotionEvent(dgme);
 		}
 	}

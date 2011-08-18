@@ -9,6 +9,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 import android.animation.Animator;
 import android.app.Activity;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -73,7 +74,7 @@ public class Shared {
 			}
 			result += s;
 		}
-		Log.d(TAG, result);
+		Log.d(TAG, SystemClock.uptimeMillis() + " - " + result);
 	}
 
 	public static PGraphics image;

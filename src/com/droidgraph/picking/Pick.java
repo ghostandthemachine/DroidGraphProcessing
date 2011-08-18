@@ -7,6 +7,8 @@ import com.droidgraph.input.MultiTouchManager;
 import com.droidgraph.util.Shared;
 
 public class Pick {
+	
+	public boolean DEBUG = false;
 
 	String TAG = "Pick";
 
@@ -34,7 +36,10 @@ public class Pick {
 		// if not touching the background rgba(0,0,0,0) then call motionManager
 		if (bc != -1) {
 
-//			Shared.p("Pick - pick() , get(), id", bc, c);
+			if(DEBUG) {
+				Shared.p("Pick - pick() , get(), id", bc, c);
+			}
+			
 			manager.handlePickSelection(dgme, c, pid);
 		}
 	}

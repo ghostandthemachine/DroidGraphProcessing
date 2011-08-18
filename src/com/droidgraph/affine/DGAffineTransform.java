@@ -3,11 +3,10 @@ package com.droidgraph.affine;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
-import com.droidgraph.renderer.PickBuffer;
-import com.droidgraph.scene.DGGroup;
+import com.droidgraph.scene.DGFilter;
 import com.droidgraph.util.Shared;
 
-public class DGAffineTransform extends DGGroup {
+public class DGAffineTransform extends DGFilter {
 
 	private PApplet p;
 
@@ -157,34 +156,34 @@ public class DGAffineTransform extends DGGroup {
 	public float rotY = 0;
 	public float rotZ = 0;
 
-	public float getRotX() {
+	public float getRotationX() {
 		return rotX;
 	}
 
-	public void setRotX(float rotX) {
+	public void setRotationX(float rotX) {
 		this.rotX = rotX;
 	}
 
-	public float getRotY() {
+	public float getRotationY() {
 		return rotY;
 	}
 
-	public void setRotY(float rotY) {
+	public void setRotationY(float rotY) {
 		this.rotY = rotY;
 	}
 
-	public float getRotZ() {
+	public float getRotationZ() {
 		return rotZ;
 	}
 
-	public void setRotZ(float rotZ) {
+	public void setRotationZ(float rotZ) {
 		this.rotZ = rotZ;
 	}
 
 	public void setRotation(float rx, float ry, float rz) {
-		setRotX(rx);
-		setRotY(ry);
-		setRotZ(rz);
+		setRotationX(rx);
+		setRotationY(ry);
+		setRotationZ(rz);
 	}
 
 	public float rotationCenterX = 0;
@@ -314,7 +313,7 @@ public class DGAffineTransform extends DGGroup {
 		p.translate(-(width / 2), -(height / 2), -(depth / 2));
 		
 		super.render();
-
+		
 		p.popMatrix();
 		p.popStyle();
 

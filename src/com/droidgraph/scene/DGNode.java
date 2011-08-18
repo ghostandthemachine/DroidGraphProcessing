@@ -6,21 +6,22 @@ import processing.core.PGraphics;
 import android.util.Log;
 
 import com.droidgraph.event.DGMotionEvent;
-import com.droidgraph.input.PointInfo;
 import com.droidgraph.motionlistener.MotionListener;
 import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.transformation.Bounds2D;
 import com.droidgraph.util.Shared;
 
 public abstract class DGNode {
+	
+	private boolean DEBUG = false;
 
 	public boolean visible = true;
 
 	private boolean isEventBlocker = false;
 
-	private Object parent;
+	private DGParent parent;
 
-	protected Bounds2D bounds = new Bounds2D(0, 0, 0, 0);
+	protected Bounds2D bounds = new Bounds2D(this, 0, 0, 0, 0);
 
 	protected int sceneID;
 
@@ -55,7 +56,10 @@ public abstract class DGNode {
 	 *         nodes underneath this one.
 	 */
 	public final boolean isEventBlocker() {
-		return !motionListeners.isEmpty();
+		if(DEBUG) {
+			Shared.p("DGNode, isEventBlocker()", this, "motion listener size:", motionListeners.size());
+		}
+		return !motionListeners.isEmpty() || isEventBlocker;
 	}
 
 	public final void setEventBlocker(boolean value) {
@@ -64,13 +68,13 @@ public abstract class DGNode {
 		}
 	}
 
-	public Object getParent() {
+	public DGParent getParent() {
 		return parent;
 	}
 
 	public final void setParent(Object parent) {
 		assert (parent == null || parent instanceof DGParent || parent instanceof DGScene);
-		this.parent = parent;
+		this.parent = (DGParent) parent;
 	}
 
 	public void render() {
@@ -94,7 +98,13 @@ public abstract class DGNode {
 	}
 
 	public void addMotionListener(MotionListener motionListener) {
+		if(DEBUG) {
+			Shared.p("DGNode - addMotionListener(", motionListener,")", this, "num listeners:", motionListeners.size());
+		}
 		motionListeners.add(motionListener);
+		if(DEBUG) {
+			Shared.p("DGNode - addMotionListener(", motionListener,")", this, "num listeners after add:", motionListeners.size());
+		}
 	}
 
 	public void removeMotionListener(MotionListener ml) {
@@ -183,6 +193,14 @@ public abstract class DGNode {
 
 	public int getSceneID() {
 		return sceneID;
+	}
+	
+	public float getWidth() {
+		return bounds.width;
+	}
+	
+	public float getHeight() {
+		return bounds.height;
 	}
 
 
