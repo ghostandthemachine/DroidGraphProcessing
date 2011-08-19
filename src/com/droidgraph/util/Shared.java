@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.droidgraph.input.MultiTouchManager;
+import com.droidgraph.scene.DGGroup;
 import com.droidgraph.scene.DGNode;
 import com.droidgraph.scene.DGScene;
 
@@ -127,6 +128,11 @@ public class Shared {
 		out = (out <= max) ? out : max;
 		out = (out >= min) ? out : min;
 		return out;
+	}
+
+	public static DGGroup rootNode;
+	public static void setSceneRoot(DGGroup group) {
+		rootNode = group;
 	}
 
 }

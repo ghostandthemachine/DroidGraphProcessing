@@ -1,13 +1,16 @@
 package com.droidgraph.fx;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import processing.core.PGraphics;
 
 import com.droidgraph.affine.DGAffineTransform;
+import com.droidgraph.scene.DGFilter;
 import com.droidgraph.scene.DGNode;
+import com.droidgraph.scene.DGParent;
 import com.droidgraph.scene.DGWrapper;
+import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.util.Shared;
 
 public class DGFXNode extends DGWrapper {
 
@@ -22,15 +25,39 @@ public class DGFXNode extends DGWrapper {
 
 	public DGFXNode(DGNode leaf) {
 		leafNode = leaf;
+		
 		affineNode = new DGAffineTransform();
-		affineNode.setChild(leafNode);
-		if (this.rootNode != leafNode) {
-			this.rootNode = leafNode;
-			initParent();
-		}
-		children.add(affineNode);
+		
+		updateTree();
+//		affineNode = new DGAffineTransform();
+//		affineNode.setChild(leafNode);
+//		if (this.rootNode != leafNode) {
+//			this.rootNode = leafNode;
+//			initParent();
+//		}
+////		children.add(affineNode);
+	}
+	
+	private void updateTree() {
+        DGNode root = leafNode;
+        root = addFilter(affineNode, root);
+        if (this.rootNode != root) {
+        	Shared.p("rootNode != root", this);
+            this.rootNode = root;
+            initParent();
+        }
 	}
 
+	private DGNode addFilter(DGFilter filter, DGNode child) {
+		if (filter != null) {
+			filter.setChild(child);
+			child = filter;
+		} else {
+			Shared.p("addFilter(), filter == null", this);
+		}
+		return child;
+	}
+	
 	@Override
 	public void render() {
 		super.render();
@@ -42,19 +69,6 @@ public class DGFXNode extends DGWrapper {
 			super.renderToPickBuffer(p);
 		}
 	}
-
-	@Override
-	public List<DGNode> getChildren() {
-		return children;
-	}
-
-	// private DGNode addFilter(DGFilter filter, DGNode child) {
-	// if (filter != null) {
-	// filter.setChild(child);
-	// child = filter;
-	// }
-	// return child;
-	// }
 
 	public DGNode getLeaf() {
 		return leafNode;
@@ -72,6 +86,28 @@ public class DGFXNode extends DGWrapper {
 	public void setOpacity(float opacity) {
 		this.opacity = opacity;
 	}
+	
+	public Vec3f getGlobalTranslation(Vec3f global) {
+//		// add this nodes translation
+//		global.add(getTranslation());
+//		
+//		DGParent parent = getParent();
+//		
+//		if(parent != Shared.rootNode && parent != null) {
+//			
+//			if(parent instanceof DGFXNode) {
+//				return global
+//			}
+//			
+//			return global;
+//		}
+		return null;
+	}
+	
+	public Vec3f getTranslation() {
+		return new Vec3f(getTranslateX(), getTranslateY(), getTranslateZ());
+	}
+	
 
 	public float getTranslateX() {
 		return affineNode.getTranslateX();
@@ -88,8 +124,16 @@ public class DGFXNode extends DGWrapper {
 	public void setTranslateY(float ty) {
 		affineNode.setTranslateY(ty);
 	}
+	
+	public float getTranslateZ() {
+		return affineNode.getTranslateZ();
+	}
 
-	public float[] getTranslation() {
+	public void setTranslateZ(float tz) {
+		affineNode.setTranslateZ(tz);
+	}
+
+	public float[] getTranslationArray() {
 		return new float[] { affineNode.getTranslateX(),
 				affineNode.getTranslateY(), affineNode.getTranslateZ() };
 	}

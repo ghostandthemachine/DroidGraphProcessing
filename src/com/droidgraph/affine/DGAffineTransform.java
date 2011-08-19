@@ -35,7 +35,7 @@ public class DGAffineTransform extends DGFilter {
 	 */
 	public void setTranslateX(float translateX) {
 		this.translateX = translateX;
-		this.bounds.x = translateX;
+		this.bounds.setX(translateX);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class DGAffineTransform extends DGFilter {
 	 */
 	public void setTranslateY(float translateY) {
 		this.translateY = translateY;
-		this.bounds.y = translateY;
+		this.bounds.setY(translateY);
 	}
 
 	/**
@@ -81,13 +81,13 @@ public class DGAffineTransform extends DGFilter {
 	}
 	
 	public void translateBy(float tbx, float tby) {
-		setTranslateX(bounds.x + tbx);
-		setTranslateY(bounds.y + tby);
+		setTranslateX(bounds.getX() + tbx);
+		setTranslateY(bounds.getY() + tby);
 	}
 	
 	public void translateBy(float tbx, float tby, float tbz) {
-		setTranslateX(bounds.x + tbx);
-		setTranslateY(bounds.y + tby);
+		setTranslateX(bounds.getX() + tbx);
+		setTranslateY(bounds.getY() + tby);
 //		setTranslateZ(bounds.z + tbz);
 	}
 
@@ -107,7 +107,7 @@ public class DGAffineTransform extends DGFilter {
 	 *            the width to set
 	 */
 	public void setWidth(float width) {
-		bounds.width = width;
+		bounds.setWidth(width);
 		this.width = width;
 	}
 
@@ -123,7 +123,7 @@ public class DGAffineTransform extends DGFilter {
 	 *            the height to set
 	 */
 	public void setHeight(float height) {
-		bounds.height = height;
+		bounds.setHeight(height);
 		this.height = height;
 	}
 

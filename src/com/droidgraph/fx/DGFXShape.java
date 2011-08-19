@@ -1,7 +1,7 @@
 package com.droidgraph.fx;
 
 import com.droidgraph.scene.DGShape;
-import com.droidgraph.shape.DGPShape2D;
+import com.droidgraph.shape.DGPShape;
 
 public class DGFXShape extends DGFXAbstractShape {
 
@@ -12,10 +12,11 @@ public class DGFXShape extends DGFXAbstractShape {
 		this.shapeNode = (DGShape)getLeaf();
 	}
 	
-	public void setShape(DGPShape2D shape) {
+	public void setShape(DGPShape shape) {
 		shapeNode.setShape(shape);
-		this.bounds.accumulate(shape.getBounds());
+		this.bounds.accumulateChild(shape.getBounds());
 		
 	}
+
 	
 }

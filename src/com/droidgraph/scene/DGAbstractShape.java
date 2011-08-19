@@ -5,16 +5,18 @@ import java.util.ArrayList;
 import processing.core.PGraphics;
 
 import com.droidgraph.material.Material;
-import com.droidgraph.shape.DGPShape2D;
+import com.droidgraph.shape.DGPShape;
 import com.droidgraph.util.Shared;
 
 public abstract class DGAbstractShape extends DGLeaf{
 	
 //	protected String TAG = "DGAbstractShape";
 	
-	public static int STROKE = 0;
-	public static int FILL = 1;
-	public static int FILL_STROKE = 2;
+	public final static int STROKE = 0;
+	public final static int FILL = 1;
+	public final static int FILL_STROKE = 2;
+	
+	protected int mode = FILL_STROKE;
 	
 	public int[] uniqueColorID;
 	
@@ -27,8 +29,8 @@ public abstract class DGAbstractShape extends DGLeaf{
 	
 	protected ArrayList<Material> materials = new ArrayList<Material>();
 	
-	public abstract DGPShape2D getShape();
-	public abstract void setShape(DGPShape2D shape);
+	public abstract DGPShape getShape();
+	public abstract void setShape(DGPShape shape);
 	
 	public final Material[] getMaterial() {
 		return (Material[]) materials.toArray();
@@ -45,6 +47,10 @@ public abstract class DGAbstractShape extends DGLeaf{
 
 	public void removeMaterial(Material material) {
 		materials.remove(material);
+	}
+	
+	public void setStrokeAndFill(int saf) {
+		mode = (saf <= 2 && saf >= 0) ? saf : mode;
 	}
 
 	public void paint(PGraphics p) {

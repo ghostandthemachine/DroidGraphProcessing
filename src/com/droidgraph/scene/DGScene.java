@@ -76,6 +76,7 @@ public class DGScene {
 		Shared.setPApplet(parent);
 		Shared.setScene(this);
 		Shared.setActivity(parent);
+		Shared.setSceneRoot(root);
 
 		// Create the off screen buffer for picking
 		offScreenBuffer = (PickBuffer) parent.createGraphics(

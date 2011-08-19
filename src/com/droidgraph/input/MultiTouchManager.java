@@ -122,25 +122,32 @@ public class MultiTouchManager {
 
 	private void dispatchEvents(DGMotionPackage pack) {
 		DGMotionEvent[] events = pack.toArray();
-		for (DGMotionEvent ev : events) {
+		for (DGMotionEvent me : events) {
+			
+			// if this event is from a pointer which is currently attached, update the attachedNode variable
+			DGNode attachedNode = pointerToNodeMap.get(me.getId());
+			if(attachedNode != null){
+				me.attachNode(attachedNode);
+			}
+			
 			// handle move updates
-			if (ev.getAction() == MotionEvent.ACTION_MOVE) {
-				if (pointerToNodeMap.containsKey(ev.getId())) {
-					pointerToNodeMap.get(ev.getId()).handleMotionEvent(ev);
+			if (me.getAction() == MotionEvent.ACTION_MOVE) {
+				if (pointerToNodeMap.containsKey(me.getId())) {
+					pointerToNodeMap.get(me.getId()).handleMotionEvent(me);
 				}
 			}
-			if (ev.getId() == ev.getPackage().getActionIndex() || pack.getPointerCount() == 1) {
-				if (ev.getActionMasked() == MotionEvent.ACTION_DOWN
-						|| ev.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
-					handlePointerDown(ev);
+			if (me.getId() == me.getPackage().getActionIndex() || pack.getPointerCount() == 1) {
+				if (me.getActionMasked() == MotionEvent.ACTION_DOWN
+						|| me.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
+					handlePointerDown(me);
 					Shared.setDebug(true);
-				} else if (ev.getAction() == MotionEvent.ACTION_UP
-						|| ev.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
+				} else if (me.getAction() == MotionEvent.ACTION_UP
+						|| me.getActionMasked() == MotionEvent.ACTION_POINTER_UP) {
 					if(DEBUG) {
-						Shared.p(ev);
+						Shared.p(me);
 					}
 					Shared.setDebug(false);
-					handlePointerUp(ev, false);
+					handlePointerUp(me, false);
 				}
 			}
 		}
@@ -153,7 +160,7 @@ public class MultiTouchManager {
 
 	// This is called by Pick when a color is selected which is with in the
 	// possible range of keys to call a node in the scene
-	public void handlePickSelection(DGMotionEvent dgme, int id, int pid) {
+	public void handlePickSelection(DGMotionEvent me, int id, int pid) {
 		// get the node from the map based on the colorID
 		selectedNode = scene.getNodeByID(id);
 		if(DEBUG_PICK) {
@@ -167,10 +174,11 @@ public class MultiTouchManager {
 		}
 		if (selectedNode != null) {
 			pointerToNodeMap.put(pid, selectedNode);
+			me.attachNode(selectedNode);
 			if(DEBUG_PICK) {
 				Shared.p("MultiTouchManager - handlePickSelection(), attach a pointer to a node in the map, send the event. PID:",pid, "node:", selectedNode);
 			}
-			selectedNode.handleMotionEvent(dgme);
+			selectedNode.handleMotionEvent(me);
 		}
 	}
 

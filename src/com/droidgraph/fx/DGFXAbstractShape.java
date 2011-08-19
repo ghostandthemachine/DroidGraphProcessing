@@ -1,7 +1,7 @@
 package com.droidgraph.fx;
 
 import com.droidgraph.scene.DGAbstractShape;
-import com.droidgraph.shape.DGPShape2D;
+import com.droidgraph.shape.DGPShape;
 
 public class DGFXAbstractShape extends DGFXNode{
 
@@ -12,7 +12,7 @@ public class DGFXAbstractShape extends DGFXNode{
         this.shapeNode = shape;
     }
     
-    public final DGPShape2D getShape() {
+    public final DGPShape getShape() {
         return shapeNode.getShape();
     }
     
@@ -31,4 +31,8 @@ public class DGFXAbstractShape extends DGFXNode{
     public final float[] getStrokeColor() {
         return shapeNode.getStrokeColor();
     }
+
+	public void setStrokeAndFill(int saf) {
+		shapeNode.setStrokeAndFill(saf);
+	}
 }

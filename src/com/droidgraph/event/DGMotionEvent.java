@@ -1,21 +1,81 @@
 package com.droidgraph.event;
 
+import com.droidgraph.scene.DGNode;
+
 public class DGMotionEvent {
 
-	
+	/*
+	 * the global Android pointer ID
+	 */
 	public int id;
+
+	/*
+	 * the local pointer ID for the attached node
+	 */
 	public int localID = -1;
+
+	/*
+	 * if this event is attached to a node in the graph
+	 */
+	public boolean attached = false;
+
+	/*
+	 * this events Android action
+	 */
 	public int action;
+
+	/*
+	 * the pointers X coordinate
+	 */
 	public float x;
+
+	/*
+	 * the pointers Y coordinate
+	 */
 	public float y;
+
+	/*
+	 * the local X coordinate relative to the attached node (if there is one)
+	 */
+	public float localX;
+
+	/*
+	 * the local Y coordinate relative to the attached node (if there is one)
+	 */
+	public float localY;
+
+	/*
+	 * the motion VelocityX of this pointer if it is not a new pointer
+	 */
 	public float velocityX = 0;
+
+	/*
+	 * the motion VelocityY of this pointer if it is not a new pointer
+	 */
 	public float velocityY = 0;
+
+	/*
+	 * the pressure of this pointer
+	 */
 	public float pressure;
+
+	/*
+	 * the time this event took place
+	 */
 	public long time;
+
+	/*
+	 * the parent package of this event
+	 */
 	public DGMotionPackage pack;
-	
-	
-	public DGMotionEvent(DGMotionPackage p, int id, int action, float x, float y, float pressure) {
+
+	/*
+	 * the attached node if there is one
+	 */
+	public DGNode attachedNode;
+
+	public DGMotionEvent(DGMotionPackage p, int id, int action, float x,
+			float y, float pressure) {
 		this.id = id;
 		this.action = action;
 		this.x = x;
@@ -23,6 +83,91 @@ public class DGMotionEvent {
 		this.pressure = pressure;
 		this.time = p.getTime();
 		this.pack = p;
+
+		this.attached = false;
+		this.attachedNode = null;
+	}
+
+	public void attachNode(DGNode node) {
+
+		attachedNode = node;
+		attached = true;
+
+		updateLocalCoordinates();
+	}
+
+	public void detachNode() {
+		attachedNode = null;
+		attached = false;
+	}
+
+	public DGNode getAttachedNode() {
+		return attachedNode;
+	}
+
+	public boolean isAttached() {
+		return attached;
+	}
+
+	private void updateLocalCoordinates() {
+		if (attachedNode != null) {
+			localX = x - attachedNode.getBounds2D().getX();
+			localY = y - attachedNode.getBounds2D().getY();
+		}
+	}
+
+	/**
+	 * @return the localX
+	 */
+	public float getLocalX() {
+		return localX;
+	}
+
+	/**
+	 * @param localX
+	 *            the localX to set
+	 */
+	public void setLocalX(float localX) {
+		this.localX = localX;
+	}
+
+	/**
+	 * @return the localY
+	 */
+	public float getLocalY() {
+		return localY;
+	}
+
+	/**
+	 * @param localY
+	 *            the localY to set
+	 */
+	public void setLocalY(float localY) {
+		this.localY = localY;
+	}
+
+	/**
+	 * @param velocityX
+	 *            the velocityX to set
+	 */
+	public void setVelocityX(float velocityX) {
+		this.velocityX = velocityX;
+	}
+
+	/**
+	 * @param velocityY
+	 *            the velocityY to set
+	 */
+	public void setVelocityY(float velocityY) {
+		this.velocityY = velocityY;
+	}
+
+	/**
+	 * @param time
+	 *            the time to set
+	 */
+	public void setTime(long time) {
+		this.time = time;
 	}
 
 	/**
@@ -33,26 +178,28 @@ public class DGMotionEvent {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public DGMotionPackage getPackage() {
 		return pack;
 	}
 
-
 	/**
-	 * @return the localID. If returns (-1), then this event has no local id assigned
+	 * @return the localID. If returns (-1), then this event has no local id
+	 *         assigned
 	 */
 	public int getLocalID() {
 		return localID;
 	}
 
 	/**
-	 * @param localID the localID to set
+	 * @param localID
+	 *            the localID to set
 	 */
 	public void setLocalID(int localID) {
 		this.localID = localID;
@@ -64,13 +211,14 @@ public class DGMotionEvent {
 	public int getAction() {
 		return action;
 	}
-	
+
 	public int getActionMasked() {
 		return pack.getActionMasked();
 	}
 
 	/**
-	 * @param action the action to set
+	 * @param action
+	 *            the action to set
 	 */
 	public void setAction(int action) {
 		this.action = action;
@@ -84,7 +232,8 @@ public class DGMotionEvent {
 	}
 
 	/**
-	 * @param x the x to set
+	 * @param x
+	 *            the x to set
 	 */
 	public void setX(float x) {
 		this.x = x;
@@ -98,7 +247,8 @@ public class DGMotionEvent {
 	}
 
 	/**
-	 * @param y the y to set
+	 * @param y
+	 *            the y to set
 	 */
 	public void setY(float y) {
 		this.y = y;
@@ -112,7 +262,8 @@ public class DGMotionEvent {
 	}
 
 	/**
-	 * @param pressure the pressure to set
+	 * @param pressure
+	 *            the pressure to set
 	 */
 	public void setPressure(float pressure) {
 		this.pressure = pressure;
@@ -124,19 +275,19 @@ public class DGMotionEvent {
 	public long getTime() {
 		return time;
 	}
-	
+
 	/**
 	 * @return the number of pointers present when this event was created
 	 */
 	public int getPointerCount() {
 		return pack.getPointerCount();
 	}
-	
+
 	public void setVelocity(float vx, float vy) {
 		velocityX = vx;
 		velocityY = vy;
 	}
-	
+
 	public float getVelocityX() {
 		return velocityX;
 	}
@@ -144,7 +295,7 @@ public class DGMotionEvent {
 	public float getVelocityY() {
 		return velocityY;
 	}
-	
+
 	/**
 	 * @return string representing this DGMotionEvent
 	 */
@@ -159,6 +310,5 @@ public class DGMotionEvent {
 		s.append(" pressure:" + pressure);
 		return s.toString();
 	}
-
 
 }

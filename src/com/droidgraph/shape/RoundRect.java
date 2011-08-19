@@ -14,7 +14,7 @@ public class RoundRect extends DGPShape2D {
 	
 	@Override
 	public void paint(PGraphics pg) {
-		pg.rect(bounds.x, bounds.y, bounds.width, bounds.height, radius);
+		pg.rect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), radius);
 	}
 	
 	

@@ -7,11 +7,9 @@ public class Triangle extends DGPShape2D {
 	public float x1, y1, x2, y2, x3, y3;
 	
 	public Triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-		this.x = x1;
-		this.y = y2;
 		
-		this.width = x1 - x3;
-		this.height = y2 - y3;
+		float width = x1 - x3;
+		float height = y2 - y3;
 		
 		this.x1 = x1;
 		this.x2 = x2;

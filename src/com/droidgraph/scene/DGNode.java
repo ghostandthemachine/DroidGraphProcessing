@@ -128,11 +128,10 @@ public abstract class DGNode {
 	}
 
 	public void setBounds2D(float x, float y, float x2, float y2) {
-		bounds.x = x;
-		bounds.y = y;
-		bounds.width = x2 - x;
-		bounds.height = y2 - y;
-
+		bounds.setX(x);
+		bounds.setY(y);
+		bounds.setWidth(x2 - x);
+		bounds.setHeight(y2 - y);
 	}
 
 	public boolean contains(float mx, float my) {
@@ -151,8 +150,8 @@ public abstract class DGNode {
 
 	public float[] globalToLocal(float[] input, float[] output) {
 		if (input.length == 2) {
-			output[0] = input[0] - bounds.x;
-			output[1] = input[1] - bounds.y;
+			output[0] = input[0] - bounds.getX();
+			output[1] = input[1] - bounds.getY();
 			return output;
 		}
 		return null;
@@ -196,11 +195,11 @@ public abstract class DGNode {
 	}
 	
 	public float getWidth() {
-		return bounds.width;
+		return bounds.getWidth();
 	}
 	
 	public float getHeight() {
-		return bounds.height;
+		return bounds.getHeight();
 	}
 
 

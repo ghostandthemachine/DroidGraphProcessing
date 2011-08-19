@@ -90,6 +90,15 @@ public class DGGroup extends DGParent {
 		}
 		Shared.scene.unregisterNode(child);
 	}
+    
+    public final void remove(int index) {
+        if (children != null) {
+            DGNode child = children.get(index);
+            if (child != null) {
+                remove(child);
+            }
+        }
+    }
 
 	public long getLifeTime() {
 		return lifetime;
@@ -110,7 +119,7 @@ public class DGGroup extends DGParent {
 	@Override
 	public void renderToPickBuffer(PGraphics p) {
 		((PickBuffer) Shared.offscreenBuffer).setCurrentIDIndex(sceneID);
-		p.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		p.rect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 		super.renderToPickBuffer(p);
 	}
 }
