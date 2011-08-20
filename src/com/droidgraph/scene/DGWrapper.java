@@ -3,6 +3,9 @@ package com.droidgraph.scene;
 import java.util.Collections;
 import java.util.List;
 
+import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.translation.Bounds;
+
 
 public abstract class DGWrapper extends DGParent{
 	   private List<DGNode> singletonList;
@@ -26,5 +29,10 @@ public abstract class DGWrapper extends DGParent{
 	            }
 	            return singletonList;
 	        }
+	    }
+	    
+	    @Override
+	    public Bounds getBounds(Vec3f transform) {
+	        return getRoot().getBounds(transform);
 	    }
 }

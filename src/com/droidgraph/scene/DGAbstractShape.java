@@ -75,9 +75,9 @@ public abstract class DGAbstractShape extends DGLeaf{
 	
 	public void setStrokeColor(float r, float g, float b, float a) {
 		strokeColor[0] = r;
-		strokeColor[0] = g;
-		strokeColor[0] = b;
-		strokeColor[0] = a;
+		strokeColor[1] = g;
+		strokeColor[2] = b;
+		strokeColor[3] = a;
 	}
 	
 	public float[] getStrokeColor() {

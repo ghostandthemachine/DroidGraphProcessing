@@ -1,6 +1,9 @@
 package com.droidgraph.event;
 
+import com.droidgraph.fx.DGFXNode;
 import com.droidgraph.scene.DGNode;
+import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.util.Shared;
 
 public class DGMotionEvent {
 
@@ -93,7 +96,9 @@ public class DGMotionEvent {
 		attachedNode = node;
 		attached = true;
 
-		updateLocalCoordinates();
+		Vec3f local = node.globalToLocal(new Vec3f(x, y, 0), null);
+		localX = local.x;
+		localY = local.y;
 	}
 
 	public void detachNode() {
@@ -109,12 +114,16 @@ public class DGMotionEvent {
 		return attached;
 	}
 
-	private void updateLocalCoordinates() {
-		if (attachedNode != null) {
-			localX = x - attachedNode.getBounds2D().getX();
-			localY = y - attachedNode.getBounds2D().getY();
-		}
-	}
+//	private Vec3f globalToLocal(Vec3f global) {
+//		Vec3f local = new Vec3f();
+//		if (attachedNode != null) {
+//			if(attachedNode instanceof DGFXNode) {
+//				Shared.p("DGMOtionEvent, globaltolocal call");
+//				attachedNode.globalToLocal(global, local);
+//			}
+//		}
+//		return local;
+//	}
 
 	/**
 	 * @return the localX

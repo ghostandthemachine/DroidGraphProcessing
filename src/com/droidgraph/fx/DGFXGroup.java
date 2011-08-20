@@ -20,10 +20,12 @@ public class DGFXGroup extends DGFXNode {
 
 	public final void add(int index, DGNode child) {
 		groupNode.add(index, child);
+		bounds.accumulateChild(child.getBounds2D());
 	}
 
 	public final void add(DGNode child) {
 		groupNode.add(-1, child);
+		bounds.accumulateChild(child.getBounds2D());
 	}
 
 	@Override
@@ -34,4 +36,5 @@ public class DGFXGroup extends DGFXNode {
 	public final void remove(int index) {
 		groupNode.remove(index);
 	}
+	
 }

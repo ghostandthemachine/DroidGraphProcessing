@@ -7,9 +7,10 @@ import processing.core.PGraphics;
 import com.droidgraph.affine.DGAffineTransform;
 import com.droidgraph.scene.DGFilter;
 import com.droidgraph.scene.DGNode;
-import com.droidgraph.scene.DGParent;
 import com.droidgraph.scene.DGWrapper;
+import com.droidgraph.transformation.Bounds2D;
 import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.translation.Bounds;
 import com.droidgraph.util.Shared;
 
 public class DGFXNode extends DGWrapper {
@@ -42,7 +43,6 @@ public class DGFXNode extends DGWrapper {
         DGNode root = leafNode;
         root = addFilter(affineNode, root);
         if (this.rootNode != root) {
-        	Shared.p("rootNode != root", this);
             this.rootNode = root;
             initParent();
         }
@@ -65,9 +65,9 @@ public class DGFXNode extends DGWrapper {
 
 	@Override
 	public void renderToPickBuffer(PGraphics p) {
-		if (this.isEventBlocker()) {
+//		if (this.isEventBlocker()) {
 			super.renderToPickBuffer(p);
-		}
+//		}
 	}
 
 	public DGNode getLeaf() {
@@ -85,23 +85,6 @@ public class DGFXNode extends DGWrapper {
 
 	public void setOpacity(float opacity) {
 		this.opacity = opacity;
-	}
-	
-	public Vec3f getGlobalTranslation(Vec3f global) {
-//		// add this nodes translation
-//		global.add(getTranslation());
-//		
-//		DGParent parent = getParent();
-//		
-//		if(parent != Shared.rootNode && parent != null) {
-//			
-//			if(parent instanceof DGFXNode) {
-//				return global
-//			}
-//			
-//			return global;
-//		}
-		return null;
 	}
 	
 	public Vec3f getTranslation() {
@@ -141,6 +124,12 @@ public class DGFXNode extends DGWrapper {
 	public void setTranslation(float[] t) {
 		affineNode.setTranslation(t[0], t[1], t[2]);
 	}
+	
+
+	public void setTranslation(float tx, float ty) {
+		affineNode.setTranslation(tx, ty);
+	}
+
 
 	public float getRotationX() {
 		return affineNode.getRotationX();
@@ -231,6 +220,18 @@ public class DGFXNode extends DGWrapper {
 	@Override
 	public void remove(DGNode node) {
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.droidgraph.scene.DGNode#getBounds(com.droidgraph.transformation.Vec3f)
+	 * return the bounds relative to this transform
+	 */
+	@Override
+	public Bounds getBounds(Vec3f transform) {
+		Bounds2D b = (Bounds2D) getBounds();
+		b.set(transform.x, transform.y, transform.z);
+		return b;
 	}
 
 }

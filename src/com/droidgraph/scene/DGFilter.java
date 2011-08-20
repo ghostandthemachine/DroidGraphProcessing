@@ -3,6 +3,10 @@ package com.droidgraph.scene;
 import java.util.Collections;
 import java.util.List;
 
+import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.translation.Bounds;
+
 public class DGFilter extends DGParent {
 
     /**
@@ -85,5 +89,15 @@ public class DGFilter extends DGParent {
         this.child.setParent(null);
         this.child = null;
         this.singletonList = null;
+    }
+
+    @Override
+    public Bounds getBounds(Vec3f transform) {
+        if (child == null) {
+            // just an empty rectangle
+            return new Bounds2D();
+        } else {
+            return child.getBounds(transform);
+        }
     }
 }

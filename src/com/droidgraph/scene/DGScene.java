@@ -6,17 +6,19 @@ import java.util.HashMap;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import android.app.Activity;
 import android.view.MotionEvent;
 
 import com.droidgraph.fx.DGFXShape;
 import com.droidgraph.input.MultiTouchManager;
 import com.droidgraph.picking.Pick;
+import com.droidgraph.renderer.DebugPickBuffer;
 import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.transformation.Bounds2D;
 import com.droidgraph.util.Shared;
 
 public class DGScene {
+	
+	private boolean DEBUG_PICK_BUFFER = false;
 
 	// String TAG = "DGScene";
 
@@ -63,8 +65,12 @@ public class DGScene {
 	 * The off screen buffer for Picking
 	 */
 	PGraphics offScreenBuffer;
+	
+	PGraphics debugBuffer;
 
 	private MultiTouchManager manager;
+
+	
 //	private ArrayList<ControlRun> controlQue = new ArrayList<ControlRun>();
 
 	public DGScene(PApplet parent) {
@@ -82,6 +88,10 @@ public class DGScene {
 		offScreenBuffer = (PickBuffer) parent.createGraphics(
 				parent.screenWidth, parent.screenHeight,
 				"com.droidgraph.renderer.PickBuffer");
+		
+		debugBuffer = (DebugPickBuffer) parent.createGraphics(
+				parent.screenWidth, parent.screenHeight,
+				"com.droidgraph.renderer.DebugPickBuffer");
 
 		Shared.setOffscreenBuffer(offScreenBuffer);
 
@@ -149,8 +159,12 @@ public class DGScene {
 			drawNodesToPickBuffer();
 			pickNodes();
 		}
-
+		
 		drawScene();
+		
+		if(DEBUG_PICK_BUFFER) {
+			drawNodesToDebugPickBuffer();
+		}
 	}
 
 	/*
@@ -166,7 +180,23 @@ public class DGScene {
 		// nodes in the scene
 		root.renderToPickBuffer(offScreenBuffer);
 		offScreenBuffer.endDraw();
-		Shared.pApplet.image(offScreenBuffer, 0,0);
+//		Shared.pApplet.image(offScreenBuffer, 0,0);
+	}
+	
+	/*
+	 * This is where we actually draw the off screen debug buffer of the touchable
+	 * (from Shared.touchables) nodes in the scene.
+	 */
+	private void drawNodesToDebugPickBuffer() {
+		// Begin drawing to the off screen buffer
+		debugBuffer.beginDraw();
+		// clear the last buffered rendering
+		debugBuffer.background(0,0,0,0);
+		// return the number of set bits which in this case is the number of
+		// nodes in the scene
+		root.renderToPickBuffer(debugBuffer);
+		debugBuffer.endDraw();
+		Shared.pApplet.image(debugBuffer, 0,0);
 	}
 
 	/*

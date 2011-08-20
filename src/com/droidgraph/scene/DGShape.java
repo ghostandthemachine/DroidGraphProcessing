@@ -4,6 +4,9 @@ import processing.core.PGraphics;
 
 import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.shape.DGPShape;
+import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.translation.Bounds;
 import com.droidgraph.util.Shared;
 
 public class DGShape extends DGAbstractShape {
@@ -22,7 +25,6 @@ public class DGShape extends DGAbstractShape {
 
 	@Override
 	public void paint(PGraphics p) {
-		
 		if (shape != null) {
 			
 			switch (mode) {
@@ -66,6 +68,13 @@ public class DGShape extends DGAbstractShape {
 	public void setShape(DGPShape shape) {
 		this.shape = shape;
 		bounds.accumulate(shape.getBounds());
+	}
+
+	@Override
+	public Bounds getBounds(Vec3f transform) {
+		Bounds2D b = (Bounds2D) shape.getBounds();
+		b.set(transform.x, transform.y, transform.z);
+		return b;
 	}
 
 }

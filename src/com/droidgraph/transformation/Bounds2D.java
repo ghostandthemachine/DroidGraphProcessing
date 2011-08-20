@@ -29,6 +29,30 @@ public class Bounds2D implements Bounds {
 		this.height = height;
 		this.parent = node;
 	}
+	
+	public Bounds2D(float x, float y, float z, float width, float height, float depth) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.width = width;
+		this.height = height;
+		this.depth = depth;
+		this.parent = null;
+	}
+
+	public Bounds2D() {
+		
+	}
+
+	public Bounds2D(Bounds2D bounds2d) {
+		this.x = bounds2d.x;
+		this.y = bounds2d.y;
+		this.z = bounds2d.z;
+		this.width = bounds2d.width;
+		this.height = bounds2d.height;
+		this.depth = bounds2d.depth;
+		this.parent = bounds2d.parent;
+	}
 
 	public boolean contains(float px, float py) {
 		return px > x && px < (x + width) && py > y && py < (y + height);
@@ -193,5 +217,28 @@ public class Bounds2D implements Bounds {
 		this.height = bounds.getHeight();
 		this.depth = bounds.getDepth();
 	}
+	
+	public void set(float x, float y, float z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
+	public boolean isEmpty() {
+		return (x == 0 && y == 0 && z == 0 && width == 0 && height == 0 && depth == 0);
+	}
+
+	public void add(Bounds2D newrect) {
+		this.x += newrect.x;
+		this.y += newrect.y;
+		this.z += newrect.z;
+		this.width += newrect.width;
+		this.height += newrect.height;
+		this.depth += newrect.depth;
+	}
+	
+	public Bounds2D clone() {
+		return new Bounds2D(this);
+	}
+	
 }

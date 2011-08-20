@@ -17,6 +17,4 @@ public class DGFXShape extends DGFXAbstractShape {
 		this.bounds.accumulateChild(shape.getBounds());
 		
 	}
-
-	
 }

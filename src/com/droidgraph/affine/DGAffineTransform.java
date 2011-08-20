@@ -4,6 +4,7 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGFilter;
+import com.droidgraph.transformation.Vec3f;
 import com.droidgraph.util.Shared;
 
 public class DGAffineTransform extends DGFilter {
@@ -20,6 +21,9 @@ public class DGAffineTransform extends DGFilter {
 	public float translateY = 0;
 	public float translateZ = 0;
 
+	public Vec3f getTranslation() {
+		return new Vec3f(translateX, translateY, translateZ);
+	}
 	// Honeycomb animation syntax
 
 	/**
@@ -345,4 +349,25 @@ public class DGAffineTransform extends DGFilter {
 		p.popMatrix();
 		p.popStyle();
 	}
+	
+    /**
+     * Calculates the accumulated product of all transforms back to
+     * the root of the tree.
+     * The inherited implementation simply returns a shared value
+     * from the parent, but SGTransform nodes must append their
+     * individual transform to a copy of that inherited object.
+     */
+    @Override
+    public Vec3f calculateCumulativeTransform() {
+    	Vec3f xform = super.calculateCumulativeTransform();
+        xform = new Vec3f(xform);
+        concatenateInto(xform);
+        Shared.p(xform);
+        return xform;
+    }
+    
+    public void concatenateInto(Vec3f at) {
+        at.translate(translateX, translateY, translateZ);
+    }
+    
 }

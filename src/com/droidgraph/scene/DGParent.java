@@ -25,7 +25,7 @@ public abstract class DGParent extends DGNode {
 		for (DGNode child : ((DGParent) this).getChildren()) {
 			((PickBuffer) Shared.offscreenBuffer).setCurrentIDIndex(child.sceneID);
 			child.renderToPickBuffer(p);
-		}
+		}	
 	}
 
 }
