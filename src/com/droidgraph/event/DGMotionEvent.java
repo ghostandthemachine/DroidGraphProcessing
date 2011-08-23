@@ -182,7 +182,7 @@ public class DGMotionEvent {
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 

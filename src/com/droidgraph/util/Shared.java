@@ -8,6 +8,7 @@ import java.util.Stack;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.SystemClock;
 import android.util.Log;
@@ -75,7 +76,7 @@ public class Shared {
 			}
 			result += s;
 		}
-		Log.d(TAG, SystemClock.uptimeMillis() + " - " + result);
+		Log.d(TAG, SystemClock.uptimeMillis() + "(frameCount:" + scene.getFrameCount() + ") - " + result);
 	}
 
 	public static PGraphics image;
@@ -112,6 +113,16 @@ public class Shared {
 		p(sb.toString());
 	}
 	
+	public static <T, S> void pMap(String tag, Map<T, S> map) {
+		StringBuilder sb = new StringBuilder(tag + " Map size:" + map.size() + " _ ");
+		Set<T> set = map.keySet();
+		for(T t : set) {
+			S s = map.get(t);
+			sb.append("key:" + t + " value:" + s + ", ");
+		}
+		p(sb.toString());
+	}
+	
 	
 	public static HashMap<Integer, DGNode> map;
 	public static void setMap(HashMap<Integer, DGNode> m) {
@@ -133,6 +144,10 @@ public class Shared {
 	public static DGGroup rootNode;
 	public static void setSceneRoot(DGGroup group) {
 		rootNode = group;
+	}
+
+	public static void createAnimation(ObjectAnimator target,	ObjectAnimator creator) {
+		pApplet.runOnUiThread(new ObjectAnimatorCreator(target, creator));
 	}
 
 }

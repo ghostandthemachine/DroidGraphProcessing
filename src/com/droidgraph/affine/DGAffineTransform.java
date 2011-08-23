@@ -4,10 +4,13 @@ import processing.core.PApplet;
 import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGFilter;
+import com.droidgraph.scene.DGNode;
 import com.droidgraph.transformation.Vec3f;
 import com.droidgraph.util.Shared;
 
 public class DGAffineTransform extends DGFilter {
+	
+	private boolean DEBUG = true;
 
 	private PApplet p;
 
@@ -15,6 +18,16 @@ public class DGAffineTransform extends DGFilter {
 
 		renderer = Shared.renderer;
 		p = Shared.pApplet;
+	}
+	
+	@Override
+	public void setChild(DGNode node) {
+		super.setChild(node);
+		width = node.getWidth();
+		height = node.getHeight();
+		if(DEBUG) {
+			Shared.p("DGAffineTransform - setChild(), width:", width, "height:", height);
+		}
 	}
 
 	public float translateX = 0;
@@ -297,6 +310,9 @@ public class DGAffineTransform extends DGFilter {
 
 	@Override
 	public void render() {
+		width = getWidth();
+		height = getHeight();
+		
 		if (!isVisible()) {
 			return;
 		}
@@ -305,11 +321,14 @@ public class DGAffineTransform extends DGFilter {
 		p.pushStyle();
 
 		p.translate(translateX, translateY, translateZ);
-
+		
+		p.translate(width / 2, height / 2, depth / 2);
+		
 		p.rotateX(rotX);
 		p.rotateY(rotY);
 		p.rotateZ(rotZ);
 
+		
 		p.translate(width / 2, height / 2, depth / 2);
 		
 		p.scale(scaleX, scaleY, scaleZ);
@@ -325,6 +344,9 @@ public class DGAffineTransform extends DGFilter {
 	
 	@Override
 	public void renderToPickBuffer(PGraphics p) {
+		width = getWidth();
+		height = getHeight();
+		
 		if (!isVisible()) {
 			return;
 		}
@@ -333,11 +355,15 @@ public class DGAffineTransform extends DGFilter {
 		p.pushStyle();
 
 		p.translate(translateX, translateY, translateZ);
-
+		
+		p.translate(width / 2, height / 2, depth / 2);
+		
 		p.rotateX(rotX);
 		p.rotateY(rotY);
 		p.rotateZ(rotZ);
 
+		p.translate(-(width / 2), -(height / 2), -(depth / 2));
+		
 		p.translate(width / 2, height / 2, depth / 2);
 		
 		p.scale(scaleX, scaleY, scaleZ);

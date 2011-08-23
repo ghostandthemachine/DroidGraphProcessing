@@ -11,14 +11,14 @@ import com.droidgraph.event.DGMotionEvent;
 import com.droidgraph.fx.DGFXNode;
 import com.droidgraph.motionlistener.MotionListener;
 import com.droidgraph.renderer.PickBuffer;
-import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Bounds;
 import com.droidgraph.transformation.Vec3f;
-import com.droidgraph.translation.Bounds;
 import com.droidgraph.util.Shared;
 
 public abstract class DGNode {
 
 	private boolean DEBUG = false;
+	private boolean DEBUG_TRANSFORM = false;
 
 	public boolean visible = true;
 
@@ -26,7 +26,7 @@ public abstract class DGNode {
 
 	private DGParent parent;
 
-	protected Bounds2D bounds = new Bounds2D(this, 0, 0, 0, 0);
+	protected Bounds bounds = new Bounds(this, 0, 0, 0, 0);
 
 	protected int sceneID;
 
@@ -36,8 +36,6 @@ public abstract class DGNode {
 
 	private Bounds cachedAccumBounds;
 	private Vec3f cachedAccumXform;
-
-	private boolean DEBUG_TRANSFORM = false;
 
 	public DGNode() {
 		// Register this node in the scene map
@@ -107,7 +105,9 @@ public abstract class DGNode {
 	 */
 	final Vec3f getCumulativeTransform() {
 		if (cachedAccumXform == null) {
-			Shared.p("DGNode getCumulativeTransform, xAccum == null");
+			if (DEBUG_TRANSFORM) {
+				Shared.p("DGNode getCumulativeTransform, xAccum == null");
+			}
 			cachedAccumXform = calculateCumulativeTransform();
 		}
 		return calculateCumulativeTransform();
@@ -179,7 +179,7 @@ public abstract class DGNode {
 	 */
 	public Vec3f globalToLocal(Vec3f global, Vec3f local) {
 		Vec3f ct = getCumulativeTransform();
-		if(local == null) {
+		if (local == null) {
 			local = new Vec3f();
 		}
 		local.x = global.x - ct.x;
@@ -207,7 +207,7 @@ public abstract class DGNode {
 		return getCumulativeTransform().transform(global, local);
 	}
 
-	static Bounds2D accumulate(Bounds2D accumulator, Bounds2D newrect,
+	static Bounds accumulate(Bounds accumulator, Bounds newrect,
 			boolean newrectshareable) {
 		if (newrect == null || newrect.isEmpty()) {
 			return accumulator;
@@ -216,7 +216,7 @@ public abstract class DGNode {
 			// TODO: We really shouldn't be so trusting of the incoming
 			// Rectangle type - we should instantiate a (platform sensitive)
 			// specific type like R2D.Double (desktop) or R2D.Float (phone)
-			return (newrectshareable ? newrect : (Bounds2D) newrect.clone());
+			return (newrectshareable ? newrect : (Bounds) newrect.clone());
 		}
 		accumulator.add(newrect);
 		return accumulator;
@@ -298,7 +298,7 @@ public abstract class DGNode {
 		}
 	}
 
-	public Bounds2D getBounds2D() {
+	public Bounds getBounds2D() {
 		return bounds;
 	}
 

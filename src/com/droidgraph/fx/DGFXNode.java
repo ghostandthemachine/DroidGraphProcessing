@@ -8,9 +8,8 @@ import com.droidgraph.affine.DGAffineTransform;
 import com.droidgraph.scene.DGFilter;
 import com.droidgraph.scene.DGNode;
 import com.droidgraph.scene.DGWrapper;
-import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Bounds;
 import com.droidgraph.transformation.Vec3f;
-import com.droidgraph.translation.Bounds;
 import com.droidgraph.util.Shared;
 
 public class DGFXNode extends DGWrapper {
@@ -30,13 +29,6 @@ public class DGFXNode extends DGWrapper {
 		affineNode = new DGAffineTransform();
 		
 		updateTree();
-//		affineNode = new DGAffineTransform();
-//		affineNode.setChild(leafNode);
-//		if (this.rootNode != leafNode) {
-//			this.rootNode = leafNode;
-//			initParent();
-//		}
-////		children.add(affineNode);
 	}
 	
 	private void updateTree() {
@@ -229,7 +221,7 @@ public class DGFXNode extends DGWrapper {
 	 */
 	@Override
 	public Bounds getBounds(Vec3f transform) {
-		Bounds2D b = (Bounds2D) getBounds();
+		Bounds b = (Bounds) getBounds();
 		b.set(transform.x, transform.y, transform.z);
 		return b;
 	}

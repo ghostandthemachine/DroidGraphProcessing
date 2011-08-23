@@ -21,7 +21,7 @@ public abstract class MotionListener{
 			me.setLocalID(pointerShiftValue);
 		}
 		handleActionEvent(me);
-		if((me.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP && me.getId() == 0) {
+		if((me.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP && me.getID() == 0) {
 			pointerShift = false;
 		}
 		return true;

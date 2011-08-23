@@ -27,10 +27,10 @@ public class DGMotionPackage {
 		if(pack.size() == 0) {
 			time = ev.getTime();
 			pack.add(ev);
-			ids.add(ev.getId());
+			ids.add(ev.getID());
 		} else if(time == ev.getTime()){
 			pack.add(ev);
-			ids.add(ev.getId());
+			ids.add(ev.getID());
 		}
 	}
 	

@@ -3,8 +3,8 @@ package com.droidgraph.scene;
 import java.util.Collections;
 import java.util.List;
 
+import com.droidgraph.transformation.Bounds;
 import com.droidgraph.transformation.Vec3f;
-import com.droidgraph.translation.Bounds;
 
 
 public abstract class DGWrapper extends DGParent{

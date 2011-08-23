@@ -17,14 +17,14 @@ public class Pick {
 
 	MultiTouchManager manager;
 	int pid;
-	DGMotionEvent dgme;
+	DGMotionEvent motionEvent;
 
-	public Pick(MultiTouchManager manager, DGMotionEvent dgme) {
+	public Pick(MultiTouchManager manager, DGMotionEvent me) {
 		this.manager = manager;
-		this.dgme = dgme;
-		this.pid = dgme.getId();
-		touchDownX = (int) (dgme.getX());
-		touchDownY = (int) (dgme.getY());
+		this.motionEvent = me;
+		this.pid = me.getID();
+		touchDownX = (int) (me.getX());
+		touchDownY = (int) (me.getY());
 	}
 
 	public void pick() {
@@ -40,7 +40,19 @@ public class Pick {
 				Shared.p("Pick - pick() , get(), id", bc, c);
 			}
 			
-			manager.handlePickSelection(dgme, c, pid);
+			manager.handlePickSelection(motionEvent, c, pid);
 		}
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Pick - ");
+		sb.append("pointer id:" + pid);
+		sb.append(", DGMotionEvent:" + motionEvent);
+		return sb.toString();
+	}
+
+	public int getPointerID() {
+		return motionEvent.getID();
 	}
 }

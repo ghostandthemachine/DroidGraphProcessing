@@ -2,6 +2,9 @@ package com.droidgraph.shape;
 
 import processing.core.PGraphics;
 
+import com.droidgraph.transformation.Bounds;
+import com.droidgraph.transformation.Vec3f;
+
 public class Sphere extends DGPShape3D {
 
 	private int ures = 16;
@@ -65,5 +68,5 @@ public class Sphere extends DGPShape3D {
 		p.sphereDetail(ures, vres);
 		p.sphere((bounds.getWidth() + bounds.getHeight() + bounds.getDepth()) / 3);
 	}
-	
+
 }

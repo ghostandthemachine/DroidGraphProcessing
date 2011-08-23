@@ -2,11 +2,12 @@ package com.droidgraph.shape;
 
 import processing.core.PGraphics;
 
-import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Bounds;
+import com.droidgraph.transformation.Vec3f;
 
 public abstract class DGPShape2D implements DGPShape{
 
-	protected Bounds2D bounds = new Bounds2D(this, 0, 0, 0, 0);
+	protected Bounds bounds = new Bounds(this, 0, 0, 0, 0);
 
 	@Override
 	public void paint(PGraphics p) {
@@ -25,8 +26,12 @@ public abstract class DGPShape2D implements DGPShape{
 		bounds.setHeight(height);
 	}
 
-	public Bounds2D getBounds() {
-		return bounds;
+	public Bounds getBounds() {
+		return bounds.getBounds();
+	}
+	
+	public Bounds getBounds(Vec3f transform) {
+		return bounds.getBounds(transform);
 	}
 	
 	public void setX(float x) {

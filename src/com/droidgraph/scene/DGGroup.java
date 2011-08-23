@@ -7,9 +7,8 @@ import java.util.List;
 import processing.core.PGraphics;
 
 import com.droidgraph.renderer.PickBuffer;
-import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Bounds;
 import com.droidgraph.transformation.Vec3f;
-import com.droidgraph.translation.Bounds;
 import com.droidgraph.util.Shared;
 
 /**
@@ -123,6 +122,9 @@ public class DGGroup extends DGParent {
 	
 	@Override
 	public void renderToPickBuffer(PGraphics p) {
+		if(!isVisible()) {
+			return;
+		}
 		((PickBuffer) Shared.offscreenBuffer).setCurrentIDIndex(sceneID);
 		p.rect(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 		super.renderToPickBuffer(p);
@@ -130,7 +132,7 @@ public class DGGroup extends DGParent {
 	
     @Override
     public final Bounds getBounds(Vec3f transform) {
-        Bounds2D bounds = null;
+        Bounds bounds = null;
         if (isVisible() && children != null && !children.isEmpty()) {
             // for now, just create the union of all the bounding boxes
             // of all the children; later, we may want to create something
@@ -139,14 +141,14 @@ public class DGGroup extends DGParent {
             for (int i = 0; i < children.size(); i++) {
                 DGNode child = children.get(i);
                 if (child.isVisible()) {
-                    Bounds2D rc = (Bounds2D) child.getBounds(transform);
+                    Bounds rc = (Bounds) child.getBounds(transform);
                     bounds = accumulate(bounds, rc, true);
                 }
             }
         }
         if (bounds == null) {
             // just an empty rectangle
-            bounds = new Bounds2D();
+            bounds = new Bounds();
         }
         return bounds;
     }

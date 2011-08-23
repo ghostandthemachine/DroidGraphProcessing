@@ -16,7 +16,7 @@ public abstract class DGAbstractShape extends DGLeaf{
 	public final static int FILL = 1;
 	public final static int FILL_STROKE = 2;
 	
-	protected int mode = FILL_STROKE;
+	protected int mode = FILL;
 	
 	public int[] uniqueColorID;
 	

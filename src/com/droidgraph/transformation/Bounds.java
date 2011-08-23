@@ -1,9 +1,8 @@
 package com.droidgraph.transformation;
 
-import com.droidgraph.translation.Bounds;
 import com.droidgraph.util.Shared;
 
-public class Bounds2D implements Bounds {
+public class Bounds{
 
 	public boolean DEBUG = false;
 
@@ -17,12 +16,18 @@ public class Bounds2D implements Bounds {
 
 	Object parent;
 
-	public Bounds2D(float width, float height) {
+	public Bounds(float width, float height, float depth) {
+		this.width = width;
+		this.height = height;
+		this.depth = depth;
+	}
+	
+	public Bounds(float width, float height) {
 		this.width = width;
 		this.height = height;
 	}
 
-	public Bounds2D(Object node, float x, float y, float width, float height) {
+	public Bounds(Object node, float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -30,7 +35,7 @@ public class Bounds2D implements Bounds {
 		this.parent = node;
 	}
 	
-	public Bounds2D(float x, float y, float z, float width, float height, float depth) {
+	public Bounds(float x, float y, float z, float width, float height, float depth) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -40,18 +45,18 @@ public class Bounds2D implements Bounds {
 		this.parent = null;
 	}
 
-	public Bounds2D() {
+	public Bounds() {
 		
 	}
 
-	public Bounds2D(Bounds2D bounds2d) {
-		this.x = bounds2d.x;
-		this.y = bounds2d.y;
-		this.z = bounds2d.z;
-		this.width = bounds2d.width;
-		this.height = bounds2d.height;
-		this.depth = bounds2d.depth;
-		this.parent = bounds2d.parent;
+	public Bounds(Bounds bounds) {
+		this.x = bounds.x;
+		this.y = bounds.y;
+		this.z = bounds.z;
+		this.width = bounds.width;
+		this.height = bounds.height;
+		this.depth = bounds.depth;
+		this.parent = bounds.parent;
 	}
 
 	public boolean contains(float px, float py) {
@@ -130,9 +135,7 @@ public class Bounds2D implements Bounds {
 		return sb.toString();
 	}
 
-	@Override
 	public Bounds getBounds() {
-		// TODO Auto-generated method stub
 		return this;
 	}
 
@@ -228,7 +231,7 @@ public class Bounds2D implements Bounds {
 		return (x == 0 && y == 0 && z == 0 && width == 0 && height == 0 && depth == 0);
 	}
 
-	public void add(Bounds2D newrect) {
+	public void add(Bounds newrect) {
 		this.x += newrect.x;
 		this.y += newrect.y;
 		this.z += newrect.z;
@@ -237,8 +240,13 @@ public class Bounds2D implements Bounds {
 		this.depth += newrect.depth;
 	}
 	
-	public Bounds2D clone() {
-		return new Bounds2D(this);
+	public Bounds clone() {
+		return new Bounds(this);
+	}
+
+	public Bounds getBounds(Vec3f transform) {
+		Bounds bounds = new Bounds(x - transform.x, y - transform.y, z - transform.y);
+		return bounds;
 	}
 	
 }

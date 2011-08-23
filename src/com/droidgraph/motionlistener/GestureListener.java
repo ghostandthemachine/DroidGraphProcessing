@@ -73,7 +73,7 @@ public class GestureListener extends ActionListener {
 
 	@Override
 	public boolean actionPointerDown(DGMotionEvent me) {
-		switch (me.getId()) {
+		switch (me.getID()) {
 		case 1:
 			lastPTwo = pTwo;
 			pTwo = me;

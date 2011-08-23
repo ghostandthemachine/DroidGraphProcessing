@@ -13,12 +13,14 @@ import com.droidgraph.input.MultiTouchManager;
 import com.droidgraph.picking.Pick;
 import com.droidgraph.renderer.DebugPickBuffer;
 import com.droidgraph.renderer.PickBuffer;
-import com.droidgraph.transformation.Bounds2D;
+import com.droidgraph.transformation.Bounds;
 import com.droidgraph.util.Shared;
 
 public class DGScene {
-	
+
 	private boolean DEBUG_PICK_BUFFER = false;
+	
+	private long frameCount = 0;
 
 	// String TAG = "DGScene";
 
@@ -28,7 +30,7 @@ public class DGScene {
 	/*
 	 * The 2D Bounds of this scene
 	 */
-	private Bounds2D bounds;
+	private Bounds bounds;
 
 	/*
 	 * The main Processing Applet
@@ -65,18 +67,18 @@ public class DGScene {
 	 * The off screen buffer for Picking
 	 */
 	PGraphics offScreenBuffer;
-	
+
 	PGraphics debugBuffer;
 
 	private MultiTouchManager manager;
 
-	
+
 //	private ArrayList<ControlRun> controlQue = new ArrayList<ControlRun>();
 
 	public DGScene(PApplet parent) {
 		this.parent = parent;
 
-		bounds = new Bounds2D(this, 0, 0, parent.screenWidth, parent.screenHeight);
+		bounds = new Bounds(this, 0, 0, parent.screenWidth, parent.screenHeight);
 
 		// Set the global variables in the Shared class
 		Shared.setPApplet(parent);
@@ -88,7 +90,7 @@ public class DGScene {
 		offScreenBuffer = (PickBuffer) parent.createGraphics(
 				parent.screenWidth, parent.screenHeight,
 				"com.droidgraph.renderer.PickBuffer");
-		
+
 		debugBuffer = (DebugPickBuffer) parent.createGraphics(
 				parent.screenWidth, parent.screenHeight,
 				"com.droidgraph.renderer.DebugPickBuffer");
@@ -124,7 +126,7 @@ public class DGScene {
 	public DGNode getNodeByID(int id) {
 		return nodeMap.get(id);
 	}
-	
+
 	public MultiTouchManager getMotionManager() {
 		return manager;
 	}
@@ -159,12 +161,13 @@ public class DGScene {
 			drawNodesToPickBuffer();
 			pickNodes();
 		}
-		
+
 		drawScene();
-		
+
 		if(DEBUG_PICK_BUFFER) {
 			drawNodesToDebugPickBuffer();
 		}
+		frameCount++;
 	}
 
 	/*
@@ -182,7 +185,7 @@ public class DGScene {
 		offScreenBuffer.endDraw();
 //		Shared.pApplet.image(offScreenBuffer, 0,0);
 	}
-	
+
 	/*
 	 * This is where we actually draw the off screen debug buffer of the touchable
 	 * (from Shared.touchables) nodes in the scene.
@@ -239,6 +242,10 @@ public class DGScene {
 
 	public boolean handleMotionEvent(MotionEvent me) {
 		return manager.onTouchEvent(me);
+	}
+
+	public long getFrameCount() {
+		return frameCount;
 	}
 
 }

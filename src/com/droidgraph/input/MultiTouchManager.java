@@ -2,6 +2,7 @@ package com.droidgraph.input;
 
 import java.util.HashMap;
 
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.droidgraph.event.DGMotionEvent;
@@ -12,7 +13,7 @@ import com.droidgraph.scene.DGScene;
 import com.droidgraph.util.Shared;
 
 public class MultiTouchManager {
-	
+
 	private boolean DEBUG = false;
 	private boolean DEBUG_PICK = false;
 	private boolean DEBUG_EVENT_BLOCKING = false;
@@ -76,7 +77,7 @@ public class MultiTouchManager {
 		processEvent(event);
 		return true;
 	}
-	
+
 	public int getNumPointers() {
 		return numPointers;
 	}
@@ -123,20 +124,20 @@ public class MultiTouchManager {
 	private void dispatchEvents(DGMotionPackage pack) {
 		DGMotionEvent[] events = pack.toArray();
 		for (DGMotionEvent me : events) {
-			
+
 			// if this event is from a pointer which is currently attached, update the attachedNode variable
-			DGNode attachedNode = pointerToNodeMap.get(me.getId());
+			DGNode attachedNode = pointerToNodeMap.get(me.getID());
 			if(attachedNode != null){
 				me.attachNode(attachedNode);
 			}
-			
+
 			// handle move updates
 			if (me.getAction() == MotionEvent.ACTION_MOVE) {
-				if (pointerToNodeMap.containsKey(me.getId())) {
-					pointerToNodeMap.get(me.getId()).handleMotionEvent(me);
+				if (pointerToNodeMap.containsKey(me.getID())) {
+					pointerToNodeMap.get(me.getID()).handleMotionEvent(me);
 				}
 			}
-			if (me.getId() == me.getPackage().getActionIndex() || pack.getPointerCount() == 1) {
+			if (me.getID() == me.getPackage().getActionIndex() || pack.getPointerCount() == 1) {
 				if (me.getActionMasked() == MotionEvent.ACTION_DOWN
 						|| me.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN) {
 					handlePointerDown(me);
@@ -186,22 +187,22 @@ public class MultiTouchManager {
 		if(DEBUG) {
 			Shared.pMap(pointerToNodeMap);
 		}
-		
-		if (pointerToNodeMap.containsKey(me.getId())) {
+
+		if (pointerToNodeMap.containsKey(me.getID())) {
 			// Send on the Action Up event to the node then remove it from the
 			// map
-			pointerToNodeMap.get(me.getId()).handleMotionEvent(me);
+			pointerToNodeMap.get(me.getID()).handleMotionEvent(me);
 			if(DEBUG) {
-				Shared.p("Removing pointer:", me.getId(), "with node:",
-					pointerToNodeMap.get(me.getId()));
-					pointerToNodeMap.remove(me.getId());
+				Shared.p("Removing pointer:", me.getID(), "with node:",
+					pointerToNodeMap.get(me.getID()));
+					pointerToNodeMap.remove(me.getID());
 			}
 		} else {
 			if(DEBUG){
-				Shared.p("Can't find", me.getId(), "in the pointerToNodeMap, map size:");
+				Shared.p("Can't find", me.getID(), "in the pointerToNodeMap, map size:");
 			}
-	
-			
+
+
 			if (!alreadyChecked) {
 				unPickTask.updateUnPick(me, pointerToNodeMap);
 				// Post an unpick check to see if this pointer up is actually
@@ -215,16 +216,20 @@ public class MultiTouchManager {
 				}
 			}
 		}
-		
+
 		// clear the pointer to node map if this is the last touch up
 		if(me.getPointerCount() == 1 ) {
 			pointerToNodeMap.clear();
 		}
 
 	}
-	
+
 	public HashMap<Integer, DGNode> getPointerToNodeMap() {
 		return pointerToNodeMap;
+	}
+
+	public void setGestureDetector(GestureDetector gestureDetector) {
+		
 	}
 
 }

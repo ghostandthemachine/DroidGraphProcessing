@@ -108,11 +108,11 @@ public abstract class ActionListener extends MotionListener {
 	private void addNewPointer(DGMotionEvent me) {
 		if ((numPointers) <= me.getPointerCount()) {
 			numPointers++;
-			globalToLocalPointerID[me.getId()] = (numPointers - 1);
-			me.setLocalID(globalToLocalPointerID[me.getId()]);
+			globalToLocalPointerID[me.getID()] = (numPointers - 1);
+			me.setLocalID(globalToLocalPointerID[me.getID()]);
 		}
 		if(DEBUG) {
-			Shared.p(node, "Add pointer with id:", me.getId(), "numPointers was: ", numPointers - 1, "now is: ", (numPointers), "Changing id array globalToLocalPointerID[me.getId()] = (numPointers - 1)", globalToLocalPointerID[me.getId()]);
+			Shared.p(node, "Add pointer with id:", me.getID(), "numPointers was: ", numPointers - 1, "now is: ", (numPointers), "Changing id array globalToLocalPointerID[me.getId()] = (numPointers - 1)", globalToLocalPointerID[me.getID()]);
 		}
 	
 	}
@@ -120,17 +120,17 @@ public abstract class ActionListener extends MotionListener {
 	// remove the pointer and set the local id of it to -1 to signify it is free
 	private void removePointer(DGMotionEvent me) {
 		if(DEBUG) {
-			Shared.p(node, "Remove pointer id:", me.getId(), "numPointers was: ", numPointers, "now is: ", (numPointers - 1), "Changing event lid from: ", me.getLocalID(), "to: -1");
+			Shared.p(node, "Remove pointer id:", me.getID(), "numPointers was: ", numPointers, "now is: ", (numPointers - 1), "Changing event lid from: ", me.getLocalID(), "to: -1");
 		}
 		numPointers--;
 		if (me.getLocalID() >= 0) {
-			globalToLocalPointerID[me.getId()] = -1;
+			globalToLocalPointerID[me.getID()] = -1;
 			me.setLocalID(-1);
 		}
 	}
 	
 	private void updateEventID(DGMotionEvent me) {
-		me.setLocalID(globalToLocalPointerID[me.getId()]);
+		me.setLocalID(globalToLocalPointerID[me.getID()]);
 	}
 	
 

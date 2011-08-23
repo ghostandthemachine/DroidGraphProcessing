@@ -29,7 +29,7 @@ public class UnPick implements Runnable {
 		int minutes = seconds / 60;
 		seconds = seconds % 60;
 		try {
-			Thread.sleep(200);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,7 +38,6 @@ public class UnPick implements Runnable {
 		manager.handlePointerUp(me, true);
 		
 		long ellpased = start - SystemClock.uptimeMillis();
-//		Shared.p("UnPick ellapsed time = ", ellpased);
 	}
 
 	public void updateUnPick(DGMotionEvent me, HashMap<Integer, DGNode> map) {
@@ -46,7 +45,4 @@ public class UnPick implements Runnable {
 		this.me = me;
 	}
 
-	public void setUnPickEvent(DGMotionEvent me) {
-
-	}
 };
