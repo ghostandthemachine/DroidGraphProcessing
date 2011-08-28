@@ -7,7 +7,7 @@ import com.droidgraph.transformation.Vec3f;
 
 public abstract class DGPShape2D implements DGPShape{
 
-	protected Bounds bounds = new Bounds(this, 0, 0, 0, 0);
+	protected Bounds bounds = new Bounds(0, 0, 0, 0);
 
 	@Override
 	public void paint(PGraphics p) {

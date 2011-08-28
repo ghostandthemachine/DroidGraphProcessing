@@ -6,12 +6,11 @@ import processing.core.PGraphics;
 
 import com.droidgraph.material.Material;
 import com.droidgraph.shape.DGPShape;
-import com.droidgraph.util.Shared;
+import com.droidgraph.util.DGConstants;
 
-public abstract class DGAbstractShape extends DGLeaf{
+public abstract class DGAbstractShape extends DGLeaf implements DGConstants {
 	
 //	protected String TAG = "DGAbstractShape";
-	
 	public final static int STROKE = 0;
 	public final static int FILL = 1;
 	public final static int FILL_STROKE = 2;
@@ -20,9 +19,11 @@ public abstract class DGAbstractShape extends DGLeaf{
 	
 	public int[] uniqueColorID;
 	
-	protected float[] fillColor = {255, 255, 255, 255};
+	protected float[] fillColor = {255, 255, 255};
+	protected float fillOpacity = 255;
 	
-	protected float[] strokeColor = {255, 255, 255, 255};
+	protected float[] strokeColor = {255, 255, 255};
+	protected float strokeOpacity = 255;
 	
 	public DGAbstractShape() {
 	}
@@ -51,6 +52,7 @@ public abstract class DGAbstractShape extends DGLeaf{
 	
 	public void setStrokeAndFill(int saf) {
 		mode = (saf <= 2 && saf >= 0) ? saf : mode;
+		repaint(true);
 	}
 
 	public void paint(PGraphics p) {
@@ -58,16 +60,40 @@ public abstract class DGAbstractShape extends DGLeaf{
 	}
 	
 	@Override
-	public void render() {
-		paint(Shared.pApplet.g);
+	public void render(PGraphics p) {
+		paint(p);
 	}
 	
 	public void setFillColor(float r, float g, float b, float a) {
 		fillColor[0] = r;
 		fillColor[1] = g;
 		fillColor[2] = b;
-		fillColor[3] = a;
+		fillOpacity = a;
+		repaint(true);
 	}
+	
+	public void setFillColor(float r, float g, float b) {
+		fillColor[0] = r;
+		fillColor[1] = g;
+		fillColor[2] = b;
+		repaint(true);
+	}
+	
+	public void setOpacity(float opacity) {
+		strokeOpacity = opacity;
+		fillOpacity = opacity;
+		if(opacity == 0) {
+			setVisible(false);
+		} else if(opacity > 0 && !isVisible()) {
+			setVisible(true);
+		}
+		repaint(true);
+	}
+	
+	public float getOpacity() {
+		return (strokeOpacity + fillOpacity) / 2;
+	}
+	
 	
 	public float[] getFillColor() {
 		return fillColor;
@@ -77,7 +103,15 @@ public abstract class DGAbstractShape extends DGLeaf{
 		strokeColor[0] = r;
 		strokeColor[1] = g;
 		strokeColor[2] = b;
-		strokeColor[3] = a;
+		strokeOpacity = a;
+		repaint(true);
+	}
+	
+	public void setStrokeColor(float r, float g, float b) {
+		strokeColor[0] = r;
+		strokeColor[1] = g;
+		strokeColor[2] = b;
+		repaint(true);
 	}
 	
 	public float[] getStrokeColor() {
@@ -97,9 +131,9 @@ public abstract class DGAbstractShape extends DGLeaf{
 	public float getFillBlue() {
 		return fillColor[2];
 	}
-
-	public float getFillAlpha() {
-		return fillColor[3];
+	
+	public float getFillOpacity() {
+		return fillOpacity;
 	}
 	
 	public float getStrokeRed() {
@@ -114,8 +148,8 @@ public abstract class DGAbstractShape extends DGLeaf{
 		return strokeColor[2];
 	}
 
-	public float getStrokeAlpha() {
-		return strokeColor[3];
+	public float getStrokeOpacity() {
+		return strokeOpacity;
 	}
 
 }

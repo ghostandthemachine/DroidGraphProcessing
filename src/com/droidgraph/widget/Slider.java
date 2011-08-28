@@ -5,7 +5,7 @@ import com.droidgraph.fx.DGFXGroup;
 import com.droidgraph.fx.DGFXShape;
 import com.droidgraph.motionlistener.ActionListener;
 import com.droidgraph.shape.Rect;
-import com.droidgraph.shape.RoundRect;
+import com.droidgraph.transformation.Vec3f;
 import com.droidgraph.util.Shared;
 
 public class Slider extends DGFXGroup {
@@ -15,20 +15,35 @@ public class Slider extends DGFXGroup {
 	
 	float value = 0.75f;
 
-	float sWidth = 100.0f;
-	float sHeight = 500.0f;
+	float sWidth = 50.0f;
+	float sHeight = 250.0f;
 	
-	Rect valueRectShape = new Rect(10,10,80,480);
+	float xOffset = 5.0f;
+	float yOffset = 5.0f;
+	
+	Rect valueRectShape;
 	
 	public Slider s = this;
 	
-	
 	public Slider() {
-		backing.setShape(new RoundRect(0,0,sWidth,sHeight,20));
-		backing.setFillColor(150,150,150,255);
-		backing.addMotionListener(new ActionListener(this){
-			float min = 10.0f;
-			float max = sHeight - 10.0f;
+		buildSlider();
+	}
+
+	public Slider(float width, float height) {
+		sWidth = width;
+		sHeight = height;
+		
+		buildSlider();
+	}
+	
+	private void buildSlider() {
+		Shared.p("SLider, builderSlider", xOffset, yOffset, sWidth - (xOffset * 2), sHeight - (yOffset * 2));
+		valueRectShape = new Rect(xOffset, yOffset, sWidth - (xOffset * 2), sHeight - (yOffset * 2));
+		
+		backing.setShape(new Rect(0,0,sWidth,sHeight));
+		backing.setFillColor(0,0,150,255);
+		
+		addMotionListener(new ActionListener(this){
 			
 			@Override
 			public boolean actionDown(DGMotionEvent me){ 
@@ -36,14 +51,15 @@ public class Slider extends DGFXGroup {
 			}
 			@Override
 			public boolean actionMove(DGMotionEvent me){ 
-				float x1 = 10;
-				float y1 = Shared.minMaxF(130, 570, me.getY()) - 100;
-				float x2 = 90;
-				float y2 = y1;
-//				Shared.p("Slider - actionMove", this, me);
-				// set the rect shape by corners instead of dimensions
-				valueRectShape.setCorners(x1, y1, x2, y2, 10
-						, 480, 80, 480);
+				Vec3f local = getParent().globalToLocal(me.getX(), me.getY());
+				
+				float x = xOffset;
+				float y = Shared.minMaxF(yOffset, sHeight - (yOffset * 2), local.y);
+				
+				float height = Shared.minMaxF(0, sHeight - (yOffset * 2), (sHeight - (yOffset * 2) - local.y + yOffset));
+				
+				valueRect.setShape(new Rect(x, y, sWidth - (xOffset * 2),  height));
+				
 				return super.actionMove(me);
 			}
 		});
@@ -52,7 +68,6 @@ public class Slider extends DGFXGroup {
 		valueRect.setShape(valueRectShape);
 		valueRect.setFillColor(0,255,0,255);
 		add(valueRect);
-		
 	}
 
 }

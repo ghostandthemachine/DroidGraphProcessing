@@ -1,5 +1,7 @@
 package com.droidgraph.event;
 
+import android.view.MotionEvent;
+
 import com.droidgraph.fx.DGFXNode;
 import com.droidgraph.scene.DGNode;
 import com.droidgraph.transformation.Vec3f;
@@ -222,7 +224,7 @@ public class DGMotionEvent {
 	}
 
 	public int getActionMasked() {
-		return pack.getActionMasked();
+		return action & MotionEvent.ACTION_MASK;
 	}
 
 	/**

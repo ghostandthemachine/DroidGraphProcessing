@@ -27,7 +27,7 @@ public class DGText extends DGPShape2D {
 	}
 	
 	public void paint(PGraphics p) {
-		p.text(text, 0, 0);
+		p.text(text);
 	}
 
 }

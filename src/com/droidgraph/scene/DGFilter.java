@@ -74,7 +74,8 @@ public class DGFilter extends DGParent {
 		this.singletonList = null;
 		this.child = child;
 		child.setParent(this);
-		bounds.accumulateChild(child.getBounds());
+		
+		markDirty(true);
 	}
 
 	@Override
@@ -89,43 +90,45 @@ public class DGFilter extends DGParent {
 		this.child = null;
 		this.singletonList = null;
 	}
-
-//    public final Bounds getBounds(Vec3f transform) {
-//        Bounds2D bounds = null;
-//        if (isVisible() && getChildren() != null && !getChildren().isEmpty()) {
-//            // for now, just create the union of all the bounding boxes
-//            // of all the children; later, we may want to create something
-//            // more minimal, such as the overall convex hull, or a
-//            // Region/Area object containing only the actual child bounds
-//            for (int i = 0; i < getChildren().size(); i++) {
-//                DGNode child = getChildren().get(i);
-//                if (child.isVisible()) {
-//                    Bounds2D rc = (Bounds2D) child.getBounds(transform);
-//                    bounds = accumulate(bounds, rc, true);
-//                }
-//            }
-//        }
-//        if (bounds == null) {
-//            // just an empty rectangle
-//            bounds = new Bounds2D();
-//        }
-//        Shared.p("DGFIlter - getBounds():", bounds);
-//        return bounds;
-//    }
 	
-	public final Bounds getBounds(Vec3f transform) {
-		Bounds bounds = new Bounds();
-		
-		if(isVisible() && getChildren() != null && !getChildren().isEmpty()) {
-		      for (int i = 0; i < getChildren().size(); i++) {
-                DGNode child = getChildren().get(i);
-                if (child.isVisible()) {
-                    Bounds rc = (Bounds) child.getBounds(transform);
-                    bounds = accumulate(bounds, rc, true);
-                }
-            }
-		}
-		
-		return bounds;
-	}
+    public boolean canSkipRendering() {
+        return false;
+    }
+
+    public boolean canSkipChildren() {
+        return false;
+    }
+	
+    @Override
+    public Bounds getBounds(Vec3f transform) {
+        if (child == null) {
+            // just an empty rectangle
+            return new Bounds();
+        } else {
+            return child.getBounds(transform);
+        }
+    }
+    
+    /**
+     * Calculates the accumulated bounds object representing the
+     * global bounds relative to the root of the tree.
+     * Since most filter nodes have the same accumulated bounds as
+     * their child, this implementation will simply report the
+     * accumulated bounds of its child.
+     * Subclasses may override this behavior if they do not conform
+     * to the above assumption.
+     */
+    @Override
+    Bounds calculateAccumBounds() {
+        if (child == null) {
+            return new Bounds();
+        } else {
+            return child.getTransformedBoundsRelativeToRoot();
+        }
+    }
+
+    @Override
+    boolean hasOverlappingContents() {
+        return child.hasOverlappingContents();
+    }
 }

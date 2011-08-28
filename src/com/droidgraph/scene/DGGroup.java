@@ -18,6 +18,7 @@ import com.droidgraph.util.Shared;
 public class DGGroup extends DGParent {
 	
 	private boolean DEBUG = false;
+	private final String TAG = "DGGroup - ";
 	
 	
 	public DGGroup() {
@@ -67,20 +68,17 @@ public class DGGroup extends DGParent {
 			children.add(index, child);
 		}
 		child.setParent(this);
-		accumulateBounds(child);
+        
+        // mark the current bounds dirty (and force repaint of former
+        // bounds as well)
+        markDirty(true); 
 		if(DEBUG) {
-			Shared.p("after add", this, bounds, child, child.getBounds2D());
+			Shared.p(TAG, "end add(),", this, "marked dirty");
 		}
 	}
 
 	public final void add(DGNode child) {
 		add(-1, child);
-		accumulateBounds(child);
-		Shared.p(bounds);
-	}
-	
-	private void accumulateBounds(DGNode node) {
-		bounds.accumulate(node.getBounds2D());
 	}
 	
 	@Override
@@ -92,6 +90,11 @@ public class DGGroup extends DGParent {
 			children.remove(child);
 			child.setParent(null);
 		}
+		
+        // mark the current bounds dirty (and force repaint of former
+        // bounds as well)
+        markDirty(true);
+        
 		Shared.scene.unregisterNode(child);
 	}
     
@@ -151,5 +154,15 @@ public class DGGroup extends DGParent {
             bounds = new Bounds();
         }
         return bounds;
+    }
+    
+
+    @Override
+    boolean hasOverlappingContents() {
+        int n = (children == null ? 0 : children.size());
+        if (n == 1) {
+            return children.get(0).hasOverlappingContents();
+        }
+        return (n != 0);
     }
 }

@@ -6,20 +6,25 @@ import java.util.HashMap;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import processing.core.PGraphicsAndroid3D;
 import android.view.MotionEvent;
 
 import com.droidgraph.fx.DGFXShape;
 import com.droidgraph.input.MultiTouchManager;
+import com.droidgraph.input.UnPick;
 import com.droidgraph.picking.Pick;
 import com.droidgraph.renderer.DebugPickBuffer;
 import com.droidgraph.renderer.PickBuffer;
 import com.droidgraph.transformation.Bounds;
 import com.droidgraph.util.Shared;
 
-public class DGScene {
+public class DGScene extends Thread {
 
+	private String TAG = "DGScene - ";
+
+	private boolean DEBUG_UNPICK = false;
 	private boolean DEBUG_PICK_BUFFER = false;
-	
+
 	private long frameCount = 0;
 
 	// String TAG = "DGScene";
@@ -45,7 +50,7 @@ public class DGScene {
 	/*
 	 * The scene background values
 	 */
-	private int[] bg = { 0, 0, 0, 255 };
+	private float[] bg = { 0, 0, 0, 255 };
 
 	/*
 	 * The Map which stores references to all of the nodes in the graph Map <
@@ -69,16 +74,21 @@ public class DGScene {
 	PGraphics offScreenBuffer;
 
 	PGraphics debugBuffer;
+	
+	PGraphics buffer;
 
 	private MultiTouchManager manager;
 
+	private ArrayList<UnPick> unPicks = new ArrayList<UnPick>();
 
-//	private ArrayList<ControlRun> controlQue = new ArrayList<ControlRun>();
+	private boolean backgroundSet = false;
+
+	// private ArrayList<ControlRun> controlQue = new ArrayList<ControlRun>();
 
 	public DGScene(PApplet parent) {
 		this.parent = parent;
 
-		bounds = new Bounds(this, 0, 0, parent.screenWidth, parent.screenHeight);
+		bounds = new Bounds(0, 0, parent.screenWidth, parent.screenHeight);
 
 		// Set the global variables in the Shared class
 		Shared.setPApplet(parent);
@@ -94,6 +104,8 @@ public class DGScene {
 		debugBuffer = (DebugPickBuffer) parent.createGraphics(
 				parent.screenWidth, parent.screenHeight,
 				"com.droidgraph.renderer.DebugPickBuffer");
+		
+		buffer = (PGraphicsAndroid3D) parent.createGraphics(parent.width, parent.height, PApplet.P3D);
 
 		Shared.setOffscreenBuffer(offScreenBuffer);
 
@@ -164,7 +176,15 @@ public class DGScene {
 
 		drawScene();
 
-		if(DEBUG_PICK_BUFFER) {
+		/*
+		 * If there are pending picks, draw to the off screen buffer and then
+		 * run the picks
+		 */
+		while (!unPicks.isEmpty()) {
+			unPickNodes();
+		}
+
+		if (DEBUG_PICK_BUFFER) {
 			drawNodesToDebugPickBuffer();
 		}
 		frameCount++;
@@ -178,28 +198,28 @@ public class DGScene {
 		// Begin drawing to the off screen buffer
 		offScreenBuffer.beginDraw();
 		// clear the last buffered rendering
-		offScreenBuffer.background(0,0,0,0);
+		offScreenBuffer.background(0, 0, 0, 0);
 		// return the number of set bits which in this case is the number of
 		// nodes in the scene
 		root.renderToPickBuffer(offScreenBuffer);
 		offScreenBuffer.endDraw();
-//		Shared.pApplet.image(offScreenBuffer, 0,0);
+		// Shared.pApplet.image(offScreenBuffer, 0,0);
 	}
 
 	/*
-	 * This is where we actually draw the off screen debug buffer of the touchable
-	 * (from Shared.touchables) nodes in the scene.
+	 * This is where we actually draw the off screen debug buffer of the
+	 * touchable (from Shared.touchables) nodes in the scene.
 	 */
 	private void drawNodesToDebugPickBuffer() {
 		// Begin drawing to the off screen buffer
 		debugBuffer.beginDraw();
 		// clear the last buffered rendering
-		debugBuffer.background(0,0,0,0);
+		debugBuffer.background(0, 0, 0, 0);
 		// return the number of set bits which in this case is the number of
 		// nodes in the scene
 		root.renderToPickBuffer(debugBuffer);
 		debugBuffer.endDraw();
-		Shared.pApplet.image(debugBuffer, 0,0);
+		Shared.pApplet.image(debugBuffer, 0, 0);
 	}
 
 	/*
@@ -213,32 +233,52 @@ public class DGScene {
 		}
 	}
 
-	private void drawScene() {
-		// Clear the main surface background
-		parent.background(bg[0], bg[1], bg[2], bg[3]);
-		// Draw the DGScene
-		root.render();
+	/*
+	 * Here the unpicks which have been qued for the next frame are run after
+	 * the next frame is drawn.
+	 */
+	private void unPickNodes() {
+		while (!unPicks.isEmpty()) {
+			UnPick u = unPicks.remove(0);
+			u.unPick();
+		}
 	}
 
-	public void setBackground(int r, int g, int b, int a) {
+	private void drawScene() {
+		// Clear the main surface background
+		if(backgroundSet) {
+			parent.background(bg[0], bg[1], bg[2], bg[3]);
+		}
+		// Draw the DGScene
+		root.render(parent.g);
+	}
+	
+	public void setBackground(float r, float g, float b, float a) {
 		bg[0] = r;
 		bg[1] = g;
 		bg[2] = b;
 		bg[3] = a;
+		backgroundSet = true;
 	}
 
 	public void quePick(Pick pick) {
 		picks.add(pick);
 	}
 
+	public void queUnPick(UnPick unPickTask) {
+		unPicks.add(unPickTask);
+		if (DEBUG_UNPICK) {
+			Shared.p(TAG, "queUnPick(), unPicks.size():", unPicks.size());
+		}
+	}
+
 	public void setNodeDepth(DGFXShape node, int zdepth) {
 
 	}
 
-	public void setBackground(int i) {
+	public void setBackground(float i) {
 		setBackground(i, i, i, i);
 	}
-
 
 	public boolean handleMotionEvent(MotionEvent me) {
 		return manager.onTouchEvent(me);

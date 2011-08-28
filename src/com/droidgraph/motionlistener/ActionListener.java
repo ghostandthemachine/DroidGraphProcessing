@@ -12,6 +12,8 @@ public abstract class ActionListener extends MotionListener {
 	protected boolean DEBUG = false;
 	
 	protected boolean touchOne = false;
+	
+	protected boolean toggled = false;
 
 	protected int numPointers = 0;
 	// Pointer ids are between 0 and 20 (max touches). -1 == not registered,
@@ -19,6 +21,8 @@ public abstract class ActionListener extends MotionListener {
 	// corresponds to the globalPointerID, the value is the new localID.
 	protected int[] globalToLocalPointerID = { -1, -1, -1, -1, -1, -1, -1, -1,
 			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+	
+	protected DGMotionEvent[] lastEvents = new DGMotionEvent[20];
 	
 	public ActionListener(DGNode node) {
 		super(node);
@@ -37,6 +41,9 @@ public abstract class ActionListener extends MotionListener {
 
 		case MotionEvent.ACTION_MOVE:
 			updateEventID(me);
+			if(lastEvents[me.getID()] != null) {
+				me.setVelocity(lastEvents[me.getID()].getX() - me.getX(), lastEvents[me.getID()].getX() - me.getX());
+			}
 			actionMove(me);
 			break;
 			
@@ -69,10 +76,11 @@ public abstract class ActionListener extends MotionListener {
 				// call the click
 				clicked(me);
 			}	
+			me.setVelocity(lastEvents[me.getID()].getX() - me.getX(), lastEvents[me.getID()].getX() - me.getX());
 			actionUp(me);
 			// remove the pointer
 			removePointer(me);
-			managerPointerFlush();
+//			flushPointerData();
 			break;
 
 		case MotionEvent.ACTION_POINTER_UP:
@@ -82,26 +90,18 @@ public abstract class ActionListener extends MotionListener {
 				touchOne = false;
 				// call the click
 				clicked(me);
+				me.setVelocity(lastEvents[me.getID()].getX() - me.getX(), lastEvents[me.getID()].getX() - me.getX());
 				actionUp(me);
 				removePointer(me);
 			} else {
+				me.setVelocity(lastEvents[me.getID()].getX() - me.getX(), lastEvents[me.getID()].getX() - me.getX());
 				actionPointerUp(me);
 				removePointer(me);
 			}
-			managerPointerFlush();
 			break;
 		}
-
+		lastEvents[me.getID()] = me;
 		return true;
-	}
-
-	private void managerPointerFlush() {
-		if(Shared.multiTouchManager.getNumPointers() == 1) {
-			for(int i = 0; i < globalToLocalPointerID.length; i++){
-				globalToLocalPointerID[i] = -1;
-			}
-			numPointers = 0;
-		}
 	}
 
 	// add a new pointer by updating the counter and assigning a new local id
@@ -169,6 +169,20 @@ public abstract class ActionListener extends MotionListener {
 		if(DEBUG) {
 			Shared.p("Clicked():", node, me);
 		}
+		if(toggled) {
+			toggled = false;
+			toggled(me);
+		} else {
+			toggled = true;
+			toggled(me);
+		}
+		return true;
+	}
+	
+	public boolean toggled(DGMotionEvent me) {
+		if(DEBUG) {
+			Shared.p("toggled():", node, me);
+		}
 		return true;
 	}
 
@@ -185,5 +199,4 @@ public abstract class ActionListener extends MotionListener {
 		}
 		return true;
 	}
-
 }

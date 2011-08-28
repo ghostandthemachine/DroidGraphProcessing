@@ -5,14 +5,17 @@ import processing.core.PGraphics;
 
 import com.droidgraph.scene.DGFilter;
 import com.droidgraph.scene.DGNode;
+import com.droidgraph.transformation.Bounds;
 import com.droidgraph.transformation.Vec3f;
 import com.droidgraph.util.Shared;
 
 public class DGAffineTransform extends DGFilter {
 	
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private PApplet p;
+	
+	private Bounds childBounds;
 
 	public DGAffineTransform() {
 
@@ -23,8 +26,9 @@ public class DGAffineTransform extends DGFilter {
 	@Override
 	public void setChild(DGNode node) {
 		super.setChild(node);
-		width = node.getWidth();
-		height = node.getHeight();
+		childBounds = node.getBounds();
+		width = childBounds.getWidth();
+		height = childBounds.getHeight();
 		if(DEBUG) {
 			Shared.p("DGAffineTransform - setChild(), width:", width, "height:", height);
 		}
@@ -309,71 +313,54 @@ public class DGAffineTransform extends DGFilter {
 	}
 
 	@Override
-	public void render() {
-		width = getWidth();
-		height = getHeight();
-		
+	public void render(PGraphics p) {
 		if (!isVisible()) {
 			return;
 		}
 
 		p.pushMatrix();
-		p.pushStyle();
 
 		p.translate(translateX, translateY, translateZ);
 		
-		p.translate(width / 2, height / 2, depth / 2);
-		
+		p.translate(rotationCenterX, rotationCenterY, rotationCenterZ);
 		p.rotateX(rotX);
 		p.rotateY(rotY);
 		p.rotateZ(rotZ);
-
+		p.translate(-rotationCenterX, -rotationCenterY, -rotationCenterZ);
 		
-		p.translate(width / 2, height / 2, depth / 2);
-		
+		p.translate(scaleX, scaleY, scaleZ);
 		p.scale(scaleX, scaleY, scaleZ);
-
-		p.translate(-(width / 2), -(height / 2), -(depth / 2));
+		p.translate(-scaleX, -scaleY, -scaleZ);
 		
-		super.render();
+		super.render(p);
 		
 		p.popMatrix();
-		p.popStyle();
 
 	}
 	
 	@Override
 	public void renderToPickBuffer(PGraphics p) {
-		width = getWidth();
-		height = getHeight();
-		
 		if (!isVisible()) {
 			return;
 		}
 
 		p.pushMatrix();
-		p.pushStyle();
 
 		p.translate(translateX, translateY, translateZ);
 		
-		p.translate(width / 2, height / 2, depth / 2);
-		
+		p.translate(rotationCenterX, rotationCenterY, rotationCenterZ);
 		p.rotateX(rotX);
 		p.rotateY(rotY);
 		p.rotateZ(rotZ);
-
-		p.translate(-(width / 2), -(height / 2), -(depth / 2));
+		p.translate(-rotationCenterX, -rotationCenterY, -rotationCenterZ);
 		
-		p.translate(width / 2, height / 2, depth / 2);
-		
+		p.translate(scaleX, scaleY, scaleZ);
 		p.scale(scaleX, scaleY, scaleZ);
-
-		p.translate(-(width / 2), -(height / 2), -(depth / 2));
+		p.translate(-scaleX, -scaleY, -scaleZ);
 		
 		super.renderToPickBuffer(p);
 
 		p.popMatrix();
-		p.popStyle();
 	}
 	
     /**
@@ -388,12 +375,25 @@ public class DGAffineTransform extends DGFilter {
     	Vec3f xform = super.calculateCumulativeTransform();
         xform = new Vec3f(xform);
         concatenateInto(xform);
-        Shared.p(xform);
+        if(DEBUG) {
+        	Shared.p(xform);
+        }
         return xform;
     }
     
     public void concatenateInto(Vec3f at) {
         at.translate(translateX, translateY, translateZ);
     }
+    
+
+    protected void invalidateTransform() {
+        // mark the current bounds dirty (and force repaint of former
+        // bounds as well)
+        markDirty(true);
+        // changing the transform will invalidate the cached transform/bounds
+        // of this node (and all descendents)
+        invalidateAccumBounds();
+    }
+    
     
 }

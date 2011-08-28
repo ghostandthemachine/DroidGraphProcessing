@@ -4,8 +4,12 @@ import android.view.MotionEvent;
 
 import com.droidgraph.event.DGMotionEvent;
 import com.droidgraph.scene.DGNode;
+import com.droidgraph.util.Shared;
 
 public abstract class MotionListener{
+	
+	private String TAG = "MotionListener - ";
+	private boolean DEBUG = false;
 	
 	protected DGNode node;
 	protected boolean pointerShift = false;
@@ -23,6 +27,10 @@ public abstract class MotionListener{
 		handleActionEvent(me);
 		if((me.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_POINTER_UP && me.getID() == 0) {
 			pointerShift = false;
+		}
+		
+		if(DEBUG) {
+			Shared.p(TAG, this, "handleMotionEvent()", me);
 		}
 		return true;
 	}

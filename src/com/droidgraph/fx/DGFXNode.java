@@ -1,7 +1,5 @@
 package com.droidgraph.fx;
 
-import java.util.ArrayList;
-
 import processing.core.PGraphics;
 
 import com.droidgraph.affine.DGAffineTransform;
@@ -10,34 +8,33 @@ import com.droidgraph.scene.DGNode;
 import com.droidgraph.scene.DGWrapper;
 import com.droidgraph.transformation.Bounds;
 import com.droidgraph.transformation.Vec3f;
+import com.droidgraph.util.DGConstants;
 import com.droidgraph.util.Shared;
 
-public class DGFXNode extends DGWrapper {
-
-	private ArrayList<DGNode> children = new ArrayList<DGNode>();
+public class DGFXNode extends DGWrapper implements DGConstants  {
 
 	private DGNode rootNode;
 
 	private DGAffineTransform affineNode;
 	private DGNode leafNode;
 
-	private float opacity = 1.0f;
+	private float opacity = 255.0f;
 
 	public DGFXNode(DGNode leaf) {
 		leafNode = leaf;
-		
+
 		affineNode = new DGAffineTransform();
-		
+
 		updateTree();
 	}
-	
+
 	private void updateTree() {
-        DGNode root = leafNode;
-        root = addFilter(affineNode, root);
-        if (this.rootNode != root) {
-            this.rootNode = root;
-            initParent();
-        }
+		DGNode root = leafNode;
+		root = addFilter(affineNode, root);
+		if (this.rootNode != root) {
+			this.rootNode = root;
+			initParent();
+		}
 	}
 
 	private DGNode addFilter(DGFilter filter, DGNode child) {
@@ -49,17 +46,15 @@ public class DGFXNode extends DGWrapper {
 		}
 		return child;
 	}
-	
+
 	@Override
-	public void render() {
-		super.render();
+	public void render(PGraphics p) {
+		super.render(p);
 	}
 
 	@Override
 	public void renderToPickBuffer(PGraphics p) {
-//		if (this.isEventBlocker()) {
-			super.renderToPickBuffer(p);
-//		}
+		super.renderToPickBuffer(p);
 	}
 
 	public DGNode getLeaf() {
@@ -71,18 +66,9 @@ public class DGFXNode extends DGWrapper {
 		return rootNode;
 	}
 
-	public float getOpacity() {
-		return opacity;
-	}
-
-	public void setOpacity(float opacity) {
-		this.opacity = opacity;
-	}
-	
 	public Vec3f getTranslation() {
 		return new Vec3f(getTranslateX(), getTranslateY(), getTranslateZ());
 	}
-	
 
 	public float getTranslateX() {
 		return affineNode.getTranslateX();
@@ -99,7 +85,7 @@ public class DGFXNode extends DGWrapper {
 	public void setTranslateY(float ty) {
 		affineNode.setTranslateY(ty);
 	}
-	
+
 	public float getTranslateZ() {
 		return affineNode.getTranslateZ();
 	}
@@ -116,12 +102,10 @@ public class DGFXNode extends DGWrapper {
 	public void setTranslation(float[] t) {
 		affineNode.setTranslation(t[0], t[1], t[2]);
 	}
-	
 
 	public void setTranslation(float tx, float ty) {
 		affineNode.setTranslation(tx, ty);
 	}
-
 
 	public float getRotationX() {
 		return affineNode.getRotationX();
@@ -205,6 +189,12 @@ public class DGFXNode extends DGWrapper {
 		affineNode.setScaleZ(s[2]);
 	}
 
+	public void setScale(float s) {
+		affineNode.setScaleX(s);
+		affineNode.setScaleY(s);
+		affineNode.setScaleZ(s);
+	}
+
 	public DGAffineTransform getTransform() {
 		return affineNode;
 	}
@@ -216,14 +206,26 @@ public class DGFXNode extends DGWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.droidgraph.scene.DGNode#getBounds(com.droidgraph.transformation.Vec3f)
-	 * return the bounds relative to this transform
+	 * 
+	 * @see
+	 * com.droidgraph.scene.DGNode#getBounds(com.droidgraph.transformation.Vec3f
+	 * ) return the bounds relative to this transform
 	 */
 	@Override
 	public Bounds getBounds(Vec3f transform) {
 		Bounds b = (Bounds) getBounds();
 		b.set(transform.x, transform.y, transform.z);
 		return b;
+	}
+
+	public Vec3f calculateCumulativeTransform() {
+		Vec3f output = new Vec3f();
+		DGNode parent = getParent();
+		if (parent == null) {
+			output = parent.getCumulativeTransform();
+		}
+		output.translate(affineNode.getTranslateX(), affineNode.getTranslateY(), affineNode.getTranslateZ());
+		return output;
 	}
 
 }

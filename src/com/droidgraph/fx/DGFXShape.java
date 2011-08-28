@@ -17,4 +17,18 @@ public class DGFXShape extends DGFXAbstractShape {
 		this.bounds.accumulateChild(shape.getBounds());
 		
 	}
+	
+	public void setOpacity(float opacity) {
+		shapeNode.setOpacity(opacity);
+		if(shapeNode.getOpacity() == 0) {
+			shapeNode.setVisible(false);
+		} else if(shapeNode.getOpacity() > 0 && !shapeNode.isVisible()) {
+			shapeNode.setVisible(true);
+		}
+//		Shared.p(opacity);
+	}
+	
+	public float getOpacity() {
+		return shapeNode.getOpacity();
+	}
 }

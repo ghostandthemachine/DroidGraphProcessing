@@ -2,12 +2,10 @@ package com.droidgraph.input;
 
 import java.util.HashMap;
 
-import android.os.SystemClock;
-
 import com.droidgraph.event.DGMotionEvent;
 import com.droidgraph.scene.DGNode;
 
-public class UnPick implements Runnable {
+public class UnPick {
 
 	long startTime;
 	HashMap<Integer, DGNode> pointerToNodeMap;
@@ -18,30 +16,11 @@ public class UnPick implements Runnable {
 		this.manager = manager;
 	}
 
-	public void setStartTime(long time) {
-		this.startTime = time;
+	public void unPick() {
+//		manager.handlePointerUp(me, true);
 	}
 
-	public void run() {
-		final long start = startTime;
-		long millis = SystemClock.uptimeMillis() - start;
-		int seconds = (int) (millis / 1000);
-		int minutes = seconds / 60;
-		seconds = seconds % 60;
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		manager.handlePointerUp(me, true);
-		
-		long ellpased = start - SystemClock.uptimeMillis();
-	}
-
-	public void updateUnPick(DGMotionEvent me, HashMap<Integer, DGNode> map) {
-		pointerToNodeMap = map;
+	public void updateUnPick(DGMotionEvent me) {
 		this.me = me;
 	}
 

@@ -23,6 +23,12 @@ public class Vec3f {
 		this.y = y;
 		this.z = z;
 	}
+	
+	public Vec3f(float x, float y) {
+		this.x = x;
+		this.y = y;
+		this.z = 0;
+	}
 
 	public Vec3f() {
 		this(0, 0, 0);
@@ -167,5 +173,12 @@ public class Vec3f {
 		s.append(", ");
 		return s.toString();
 	}
+
+	public Bounds createTransformedShape(Bounds subregionBounds) {
+		Bounds b = subregionBounds;
+		b.transform(this);
+		return b;
+	}
+
 
 }

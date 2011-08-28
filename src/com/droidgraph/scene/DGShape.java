@@ -13,7 +13,7 @@ public class DGShape extends DGAbstractShape {
 	protected DGPShape shape;
 
 	private float strokeWeight = 1.0f;
-
+	
 	public void strokeWeight(float stroke) {
 		this.strokeWeight = stroke;
 	}
@@ -30,20 +30,20 @@ public class DGShape extends DGAbstractShape {
 
 			case DGShape.FILL:
 				p.noStroke();
-				p.fill(fillColor[0], fillColor[1], fillColor[2], fillColor[3]);
+				p.fill(fillColor[0], fillColor[1], fillColor[2], fillOpacity);
 				break;
 
 			case DGShape.STROKE:
 				p.strokeWeight(strokeWeight);
 				p.stroke(strokeColor[0], strokeColor[1], strokeColor[2],
-						strokeColor[3]);
+						strokeOpacity);
 				break;
 
 			case DGShape.FILL_STROKE:
-				p.fill(fillColor[0], fillColor[1], fillColor[2], fillColor[3]);
+				p.fill(fillColor[0], fillColor[1], fillColor[2], fillOpacity);
 				p.strokeWeight(strokeWeight);
 				p.stroke(strokeColor[0], strokeColor[1], strokeColor[2],
-						strokeColor[3]);
+						strokeOpacity);
 				break;
 			}
 			shape.paint(p);
@@ -52,8 +52,8 @@ public class DGShape extends DGAbstractShape {
 
 	public void renderToPickBuffer(PGraphics p) {
 		((PickBuffer) Shared.offscreenBuffer).setCurrentIDIndex(sceneID);
-		p.fill(fillColor[0], fillColor[1], fillColor[2], fillColor[3]);
-		p.stroke(strokeColor[0], strokeColor[1], strokeColor[2], strokeColor[3]);
+		p.fill(fillColor[0], fillColor[1], fillColor[2]);
+		p.stroke(strokeColor[0], strokeColor[1], strokeColor[2]);
 		p.strokeWeight(strokeWeight);
 		paint(Shared.offscreenBuffer);
 	}
@@ -67,6 +67,7 @@ public class DGShape extends DGAbstractShape {
 	public void setShape(DGPShape shape) {
 		this.shape = shape;
 		bounds.accumulate(shape.getBounds());
+		repaint(true);
 	}
 
 	@Override

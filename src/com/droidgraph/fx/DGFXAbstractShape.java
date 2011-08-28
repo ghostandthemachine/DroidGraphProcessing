@@ -20,12 +20,20 @@ public class DGFXAbstractShape extends DGFXNode{
         shapeNode.setFillColor(r, g, b, a);
     }
     
+    public void setFillColor(float r, float g, float b) {
+        shapeNode.setFillColor(r, g, b, 255);
+    }
+    
     public final float[] getFillColor() {
         return shapeNode.getFillColor();
     }
 
     public void setStrokeColor(float r, float g, float b, float a) {
         shapeNode.setStrokeColor(r, g, b, a);
+    }
+    
+    public void setStrokeColor(float r, float g, float b) {
+        shapeNode.setStrokeColor(r, g, b, 255);
     }
 
     public final float[] getStrokeColor() {
